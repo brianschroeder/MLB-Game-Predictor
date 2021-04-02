@@ -1,5 +1,6 @@
 import requests
 import json
+import pandas as pd
 
 def mlb_schedule():
     game_ids = []
@@ -9,6 +10,8 @@ def mlb_schedule():
     for game in games:
         game_ids.append(game['gamePk'])
     return game_ids
+
+mlb_teamStats = []
 
 for games in mlb_schedule():
     homeBA = []
@@ -77,4 +80,6 @@ for games in mlb_schedule():
         'Away Starting WHIP': awayPitcherStats['whip'],
     }
 
-    print(stats)
+    mlb_teamStats.append(stats)
+stats_dataframe = pd.DataFrame(data=mlb_teamStats)
+stats_dataframe.to_html("C:/Users/brian/Desktop/mlbstats.html")
