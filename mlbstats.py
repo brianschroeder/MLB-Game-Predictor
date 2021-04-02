@@ -1,6 +1,6 @@
 import requests
 import json
-import pandas as pd
+from prettytable import PrettyTable
 
 def mlb_schedule():
     game_ids = []
@@ -69,17 +69,22 @@ for games in mlb_schedule():
     awayPitcherStats = (awaypitcherRequest_json['sport_career_pitching']['queryResults']['row'])
 
 
-    stats = {
-        'Home Team': homeTeamName,
-        'Away Team': awayTeamName,
-        'Home Batting Average': sum(homeBA),
-        'Away Batting Average': sum(awayBA),
-        'Home Starting ERA': homePitcherStats['era'],
-        'Away Starting ERA': awayPitcherStats['era'],
-        'Home Starting WHIP': homePitcherStats['whip'],
-        'Away Starting WHIP': awayPitcherStats['whip'],
-    }
+    stats = [
+        homeTeamName,
+        awayTeamName,
+        sum(homeBA),
+        sum(awayBA),
+        homePitcherStats['era'],
+        awayPitcherStats['era'],
+        homePitcherStats['whip'],
+        awayPitcherStats['whip']
+    ]
 
     mlb_teamStats.append(stats)
-stats_dataframe = pd.DataFrame(data=mlb_teamStats)
-stats_dataframe.to_html("C:/Users/brian/Desktop/mlbstats.html")
+
+myTable = PrettyTable(["Home Team", "Away Team", "Home Batting Average", "Away Batting Average", "Home Starting ERA", "Away Starting ERA", "Home Starting WHIP", "Away Starting WHIP" ])
+
+for team in mlb_teamStats:
+   myTable.add_row((team))
+
+print(myTable)
