@@ -73,6 +73,8 @@ for games in mlb_schedule():
         'Away Batting Average': sum(awayBA),
         'Home Starting ERA': homePitcherStats['era'],
         'Away Starting ERA': awayPitcherStats['era'],
+        'Home Starting WHIP': homePitcherStats['whip'],
+        'Away Starting WHIP': awayPitcherStats['whip'],
     }
 
     print(stats)
