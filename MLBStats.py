@@ -100,9 +100,9 @@ for games in mlb_schedule():
     mlb_advantages.append(advantages)
 
 stats_dataframe = pd.DataFrame(data=mlb_teamStats)
-stats_dataframe_sorted = stats_dataframe.sort_values(by='Home Name', ascending=False)
+stats_dataframe_sorted = stats_dataframe.sort_values(by='Home Team', ascending=False)
 advantages_dataframe = pd.DataFrame(data=mlb_advantages)
-advantages_dataframe_sorted = advantages_dataframe.sort_values(by='Home Name', ascending=False)
+advantages_dataframe_sorted = advantages_dataframe.sort_values(by='Home Team', ascending=False)
 
 # Set Pandas Table Output Sizing
 pd.set_option('display.max_rows', 700)
@@ -130,4 +130,4 @@ htmlbottom = """
 
 #Export Tables to HTML Page
 with open('/var/www/html/index.html', 'w') as _file:
-    _file.write(htmltop + htmlheader + stats_dataframe.to_html(index=False, col_space=100) + htmlheader2 + advantages_dataframe_sorted.to_html(index=False, col_space=100) + htmlbottom)
+    _file.write(htmltop + htmlheader + stats_dataframe_sorted.to_html(index=False, col_space=100) + htmlheader2 + advantages_dataframe_sorted.to_html(index=False, col_space=100) + htmlbottom)
