@@ -3,10 +3,11 @@ import json
 import pandas as pd
 from datetime import date
 
+todaysgames = date.today()
 
 def mlb_schedule():
     game_ids = []
-    todaysgames = date.today()
+    
     request = requests.get(f"http://statsapi.mlb.com/api/v1/schedule/games/?sportId=1&date={todaysgames}").text
     request_json = json.loads(request)
     games = (request_json['dates'][0]['games'])
@@ -114,11 +115,12 @@ pd.set_option('display.width', 350)
 htmlheader = "<h1>Team Statistics</h1>"
 htmlheader2 = "<br></br> <h1> Team Advantages </h1>"
 
-htmltop = """
+htmltop = f"""
 <!DOCTYPE html>
 <html>
 <head>
 <link rel="stylesheet" href="./MLBStyle.css">
+Games for: {todaysgames}
 </head>
 <body>
 
