@@ -17,6 +17,7 @@ def mlb_schedule():
 
 mlb_teamStats = []
 mlb_advantages = []
+teamAdvatage = []
 
 for games in mlb_schedule():
     homeBA = []
