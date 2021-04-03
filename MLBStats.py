@@ -123,7 +123,7 @@ htmltop = f"""
 <html>
 <head>
 <link rel="stylesheet" href="./MLBStyle.css">
-<h3> Games for: {todaysDate} </h3>
+<h2> Games for: {todaysDate} </h2>
 </head>
 <body>
 
@@ -131,7 +131,7 @@ htmltop = f"""
 
 htmlbottom = f"""
 <br> </br> <br></br>
-<h3> Update Time: {updateTime} </h3>
+<h4> Updated Time: {updateTime} </h4>
 </body>
 </html>
 """
