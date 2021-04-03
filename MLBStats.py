@@ -113,7 +113,7 @@ htmltop = """
 <!DOCTYPE html>
 <html>
 <head>
-<link rel="stylesheet" href="/var/www/html/MLBStyle.css">
+<link rel="stylesheet" href="./MLBStyle.css">
 </head>
 <body>
 
