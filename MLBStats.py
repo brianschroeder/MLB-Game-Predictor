@@ -6,7 +6,7 @@ from prettytable import from_html_one
 
 def mlb_schedule():
     game_ids = []
-    request = requests.get("http://statsapi.mlb.com/api/v1/schedule/games/?sportId=1&date=04/02/2021").text
+    request = requests.get("http://statsapi.mlb.com/api/v1/schedule/games/?sportId=1&date=04/03/2021").text
     request_json = json.loads(request)
     games = (request_json['dates'][0]['games'])
     for game in games:
