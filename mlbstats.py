@@ -79,16 +79,18 @@ for games in mlb_schedule():
         round(float(homePitcherStats['whip']), 2),
         round(float(awayPitcherStats['whip']), 2),
         round(sum(homeBA) - sum(awayBA), 2),
-        round(sum(awayBA) - sum(homeBA), 2),
         round(float(homePitcherStats['era']) - float(awayPitcherStats['era']), 2) * -1,
-        round(float(awayPitcherStats['era']) - float(homePitcherStats['era']), 2) * -1,
         round(float(homePitcherStats['whip']) - float(awayPitcherStats['whip']), 2) * -1,
+        round(sum(awayBA) - sum(homeBA), 2),
+        round(float(awayPitcherStats['era']) - float(homePitcherStats['era']), 2) * -1,
         round(float(awayPitcherStats['whip']) - float(homePitcherStats['whip']), 2) * -1
     ]
 
     mlb_teamStats.append(stats)
 
-myTable = PrettyTable(["Home Team", "Away Team", "Home Batting Average", "Away Batting Average","Home Starting ERA", "Away Starting ERA" , "Home Starting WHIP", "Away Starting WHIP", "Home BA Advantage", "Away BA Advantage", "Home ERA Advantage", "Away ERA Advantage", "Home WHIP Advantage", "Away WHIP Advantage"])
+myTable = PrettyTable(["Home Team", "Away Team", "Home Batting Average", "Away Batting Average","Home Starting ERA", "Away Starting ERA" , "Home Starting WHIP", "Away Starting WHIP", "Home BA Advantage", "Home ERA Advantage", "Home WHIP Advantage", "Away BA Advantage", "Away ERA Advantage", "Away WHIP Advantage"])
+myTable.sortby = "Home ERA Advantage"
+myTable.reversesort = True
 
 for team in mlb_teamStats:
    myTable.add_row((team))
