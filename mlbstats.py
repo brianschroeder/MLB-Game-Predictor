@@ -78,12 +78,12 @@ for games in mlb_schedule():
         round(float(awayPitcherStats['era']), 2),
         round(float(homePitcherStats['whip']), 2),
         round(float(awayPitcherStats['whip']), 2),
-        round(sum(homeBA) - sum(awayBA), 2),
-        round(sum(awayBA) - sum(homeBA), 2),
-        round(float(homePitcherStats['era']) - float(awayPitcherStats['era']), 2),
-        round(float(awayPitcherStats['era']) - float(homePitcherStats['era']), 2),
-        round(float(homePitcherStats['whip']) - float(awayPitcherStats['whip']), 2),
-        round(float(awayPitcherStats['whip']) - float(homePitcherStats['whip']), 2)
+        round(sum(homeBA) - sum(awayBA), 2) * -1,
+        round(sum(awayBA) - sum(homeBA), 2) * -1,
+        round(float(homePitcherStats['era']) - float(awayPitcherStats['era']), 2) * -1,
+        round(float(awayPitcherStats['era']) - float(homePitcherStats['era']), 2) * -1,
+        round(float(homePitcherStats['whip']) - float(awayPitcherStats['whip']), 2) * -1,
+        round(float(awayPitcherStats['whip']) - float(homePitcherStats['whip']), 2) * -1
     ]
 
     mlb_teamStats.append(stats)
