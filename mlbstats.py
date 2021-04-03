@@ -1,5 +1,6 @@
 import requests
 import json
+import pandas as pd
 from prettytable import PrettyTable
 from prettytable import from_html_one
 
@@ -13,6 +14,7 @@ def mlb_schedule():
     return game_ids
 
 mlb_teamStats = []
+mlb_advantages = []
 
 for games in mlb_schedule():
     homeBA = []
@@ -69,30 +71,63 @@ for games in mlb_schedule():
     homePitcherStats = (homepitcherRequest_json['sport_career_pitching']['queryResults']['row'])
     awayPitcherStats = (awaypitcherRequest_json['sport_career_pitching']['queryResults']['row'])
 
-    stats = [
-        homeTeamName,
-        awayTeamName,
-        round(sum(homeBA), 2),
-        round(sum(awayBA), 2),
-        round(float(homePitcherStats['era']), 2),
-        round(float(awayPitcherStats['era']), 2),
-        round(float(homePitcherStats['whip']), 2),
-        round(float(awayPitcherStats['whip']), 2),
-        round(sum(homeBA) - sum(awayBA), 2),
-        round(float(homePitcherStats['era']) - float(awayPitcherStats['era']), 2) * -1,
-        round(float(homePitcherStats['whip']) - float(awayPitcherStats['whip']), 2) * -1,
-        round(sum(awayBA) - sum(homeBA), 2),
-        round(float(awayPitcherStats['era']) - float(homePitcherStats['era']), 2) * -1,
-        round(float(awayPitcherStats['whip']) - float(homePitcherStats['whip']), 2) * -1
-    ]
+    stats = {
+        'Home Team': homeTeamName,
+        "Away Team": awayTeamName,
+        "Home Batting Average": round(sum(homeBA), 2),
+        "Away Batting Average": round(sum(awayBA), 2),
+        "Home Starting ERA": round(float(homePitcherStats['era']), 2),
+        "Away Starting ERA": round(float(awayPitcherStats['era']), 2),
+        "Home Starting WHIP": round(float(homePitcherStats['whip']), 2),
+        "Away Starting WHIP": round(float(awayPitcherStats['whip']), 2),
+    }
+
+    advantages = {
+        'Home Team': homeTeamName,
+        "Away Team": awayTeamName,
+        "Home BA Advantage": round(sum(homeBA) - sum(awayBA), 2),
+        "Home ERA Advantage": round(float(homePitcherStats['era']) - float(awayPitcherStats['era']), 2) * -1,
+        "Home WHIP Advantage": round(float(homePitcherStats['whip']) - float(awayPitcherStats['whip']), 2) * -1,
+        "Away BA Advantage": round(sum(awayBA) - sum(homeBA), 2),
+        "Away ERA Advantage": round(float(awayPitcherStats['era']) - float(homePitcherStats['era']), 2) * -1,
+        "Away WHIP Advantage": round(float(awayPitcherStats['whip']) - float(homePitcherStats['whip']), 2) * -1
+    }
 
     mlb_teamStats.append(stats)
+    mlb_advantages.append(advantages)
 
-myTable = PrettyTable(["Home Team", "Away Team", "Home Batting Average", "Away Batting Average","Home Starting ERA", "Away Starting ERA" , "Home Starting WHIP", "Away Starting WHIP", "Home BA Advantage", "Home ERA Advantage", "Home WHIP Advantage", "Away BA Advantage", "Away ERA Advantage", "Away WHIP Advantage"])
-myTable.sortby = "Home ERA Advantage"
-myTable.reversesort = True
+stats_dataframe = pd.DataFrame(data=mlb_teamStats)
+advantages_dataframe = pd.DataFrame(data=mlb_advantages)
+advantages_dataframe_sorted = advantages_dataframe.sort_values(by='Home ERA Advantage', ascending=False)
 
-for team in mlb_teamStats:
-   myTable.add_row((team))
+# Set Pandas Table Output Sizing
+pd.set_option('display.max_rows', 700)
+pd.set_option('display.max_columns', 700)
+pd.set_option('display.width', 350)
 
-print(myTable)
+stats_dataframe.to_html('c:/users/brian/desktop/MLBStats.html')
+advantages_dataframe_sorted.to_html('c:/users/brian/desktop/MLBStats.html')
+
+
+#Setup HTML for Webpage
+htmlheader = "<h1>Team Statistics</h1>"
+htmlheader2 = "<br></br> <h1> Team Advantages </h1>"
+
+htmltop = """
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="C:/Users/brian/Desktop/mlbstyle.css">
+</head>
+<body>
+
+"""
+
+htmlbottom = """
+</body>
+</html>
+"""
+
+#Export Tables to HTML Page
+with open('/var/www/html/index.html', 'w') as _file:
+    _file.write(htmltop + htmlheader + stats_dataframe.to_html(index=False, col_space=100) + htmlheader2 + advantages_dataframe_sorted.to_html(index=False, col_space=100) + htmlbottom)
