@@ -1,14 +1,15 @@
 import requests
 import json
 import pandas as pd
-from datetime import date
+import datetime 
 
-todaysgames = date.today()
+todaysGames = datetime.datetime.now().strftime("%m/%d/%Y")
+updateTime = datetime.datetime.now().strftime("%m/%d/%Y %I:%M:%S")
 
 def mlb_schedule():
     game_ids = []
     
-    request = requests.get(f"http://statsapi.mlb.com/api/v1/schedule/games/?sportId=1&date={todaysgames}").text
+    request = requests.get(f"http://statsapi.mlb.com/api/v1/schedule/games/?sportId=1&date={todaysGames}").text
     request_json = json.loads(request)
     games = (request_json['dates'][0]['games'])
     for game in games:
@@ -126,7 +127,9 @@ htmltop = f"""
 
 """
 
-htmlbottom = """
+htmlbottom = f"""
+<br> </br> <br></br>
+Update Time: {updateTime}
 </body>
 </html>
 """
