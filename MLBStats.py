@@ -105,10 +105,6 @@ pd.set_option('display.max_rows', 700)
 pd.set_option('display.max_columns', 700)
 pd.set_option('display.width', 350)
 
-stats_dataframe.to_html('c:/users/brian/desktop/MLBStats.html')
-advantages_dataframe_sorted.to_html('c:/users/brian/desktop/MLBStats.html')
-
-
 #Setup HTML for Webpage
 htmlheader = "<h1>Team Statistics</h1>"
 htmlheader2 = "<br></br> <h1> Team Advantages </h1>"
@@ -117,7 +113,7 @@ htmltop = """
 <!DOCTYPE html>
 <html>
 <head>
-<link rel="stylesheet" href="C:/Users/brian/Desktop/mlbstyle.css">
+<link rel="stylesheet" href="/var/www/html/MLBStyle.css">
 </head>
 <body>
 
