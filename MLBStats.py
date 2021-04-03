@@ -121,7 +121,7 @@ htmltop = f"""
 <html>
 <head>
 <link rel="stylesheet" href="./MLBStyle.css">
-<h3> Games for: {todaysgames} </h3>
+<h3> Games for: {todaysGames} </h3>
 </head>
 <body>
 
