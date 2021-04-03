@@ -1,6 +1,7 @@
 import requests
 import json
 from prettytable import PrettyTable
+from prettytable import from_html_one
 
 def mlb_schedule():
     game_ids = []
@@ -68,21 +69,26 @@ for games in mlb_schedule():
     homePitcherStats = (homepitcherRequest_json['sport_career_pitching']['queryResults']['row'])
     awayPitcherStats = (awaypitcherRequest_json['sport_career_pitching']['queryResults']['row'])
 
-
     stats = [
         homeTeamName,
         awayTeamName,
-        sum(homeBA),
-        sum(awayBA),
-        homePitcherStats['era'],
-        awayPitcherStats['era'],
-        homePitcherStats['whip'],
-        awayPitcherStats['whip']
+        round(sum(homeBA), 2),
+        round(sum(awayBA), 2),
+        round(float(homePitcherStats['era']), 2),
+        round(float(awayPitcherStats['era']), 2),
+        round(float(homePitcherStats['whip']), 2),
+        round(float(awayPitcherStats['whip']), 2),
+        round(sum(homeBA) - sum(awayBA), 2),
+        round(sum(awayBA) - sum(homeBA), 2),
+        round(float(homePitcherStats['era']) - float(awayPitcherStats['era']), 2),
+        round(float(awayPitcherStats['era']) - float(homePitcherStats['era']), 2),
+        round(float(homePitcherStats['whip']) - float(awayPitcherStats['whip']), 2),
+        round(float(awayPitcherStats['whip']) - float(homePitcherStats['whip']), 2)
     ]
 
     mlb_teamStats.append(stats)
 
-myTable = PrettyTable(["Home Team", "Away Team", "Home Batting Average", "Away Batting Average", "Home Starting ERA", "Away Starting ERA", "Home Starting WHIP", "Away Starting WHIP" ])
+myTable = PrettyTable(["Home Team", "Away Team", "Home Batting Average", "Away Batting Average","Home Starting ERA", "Away Starting ERA" , "Home Starting WHIP", "Away Starting WHIP", "Home BA Advantage", "Away BA Advantage", "Home ERA Advantage", "Away ERA Advantage", "Home WHIP Advantage", "Away WHIP Advantage"])
 
 for team in mlb_teamStats:
    myTable.add_row((team))
