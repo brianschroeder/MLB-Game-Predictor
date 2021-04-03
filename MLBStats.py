@@ -78,11 +78,11 @@ for games in mlb_schedule():
         'Home Team': homeTeamName,
         "Away Team": awayTeamName,
         "Home Batting Average": round(sum(homeBA), 2),
-        "Away Batting Average": round(sum(awayBA), 2),
         "Home Starting ERA": round(float(homePitcherStats['era']), 2),
-        "Away Starting ERA": round(float(awayPitcherStats['era']), 2),
         "Home Starting WHIP": round(float(homePitcherStats['whip']), 2),
-        "Away Starting WHIP": round(float(awayPitcherStats['whip']), 2),
+        "Away Batting Average": round(sum(awayBA), 2),
+        "Away Starting ERA": round(float(awayPitcherStats['era']), 2),
+        "Away Starting WHIP": round(float(awayPitcherStats['whip']), 2)
     }
 
     advantages = {
