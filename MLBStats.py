@@ -4,7 +4,6 @@ import pandas as pd
 import datetime 
 
 todaysGames = datetime.datetime.now().strftime("%m/%d/%Y")
-updateTime = datetime.datetime.now().strftime("%m/%d/%Y %I:%M:%S")
 
 def mlb_schedule():
     game_ids = []
@@ -112,6 +111,9 @@ pd.set_option('display.max_rows', 700)
 pd.set_option('display.max_columns', 700)
 pd.set_option('display.width', 350)
 
+todaysDate = datetime.datetime.now().strftime("%A, %B %d, %Y")
+updateTime = datetime.datetime.now().strftime("%m/%d/%Y %I:%M:%S")
+
 #Setup HTML for Webpage
 htmlheader = "<h1>Team Statistics</h1>"
 htmlheader2 = "<br></br> <h1> Team Advantages </h1>"
@@ -121,7 +123,7 @@ htmltop = f"""
 <html>
 <head>
 <link rel="stylesheet" href="./MLBStyle.css">
-<h3> Games for: {todaysGames} </h3>
+<h3> Games for: {todaysDate} </h3>
 </head>
 <body>
 
@@ -129,7 +131,7 @@ htmltop = f"""
 
 htmlbottom = f"""
 <br> </br> <br></br>
-Update Time: {updateTime}
+<h3> Update Time: {updateTime} </h3>
 </body>
 </html>
 """
