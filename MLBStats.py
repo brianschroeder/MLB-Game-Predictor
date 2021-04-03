@@ -97,6 +97,12 @@ for games in mlb_schedule():
         "Away ERA Advantage": round(float(awayPitcherStats['era']) - float(homePitcherStats['era']), 2) * -1,
         "Away WHIP Advantage": round(float(awayPitcherStats['whip']) - float(homePitcherStats['whip']), 2) * -1
     }
+    
+    if (advantages['Home BA Advantage']) > (advantages['Away BA Advantage']) and (advantages['Home ERA Advantage']) > (advantages['Away ERA Advantage']) and (advantages['Home WHIP Advantage']) > (advantages['Away WHIP Advantage']):
+    teamAdvatage.append(f"<p>{advantages['Home Team']} lead the {advantages['Away Team']} in Batting Average, WHIP, and ERA!</p>")
+
+    if (advantages['Away BA Advantage']) > (advantages['Home BA Advantage']) and (advantages['Away ERA Advantage']) > (advantages['Home ERA Advantage']) and (advantages['Away WHIP Advantage']) > (advantages['Home WHIP Advantage']):
+        teamAdvatage.append(f"{advantages['Away Team']} lead the {advantages['Home Team']} in Batting Average, WHIP, and ERA!</p>")
 
     mlb_teamStats.append(stats)
     mlb_advantages.append(advantages)
@@ -114,6 +120,12 @@ pd.set_option('display.width', 350)
 todaysDate = datetime.datetime.now().strftime("%A, %B %d, %Y")
 updateTime = datetime.datetime.now().strftime("%m/%d/%Y %I:%M:%S")
 
+                            
+htmlgameanalysis = "<h1>Game Analysis</h1>"
+                            
+for team in teamAdvatage:
+    htmlgameanalysis += (team)
+                            
 #Setup HTML for Webpage
 htmlheader = "<h1>Team Statistics</h1>"
 htmlheader2 = "<br></br> <h1> Team Advantages </h1>"
@@ -138,4 +150,4 @@ htmlbottom = f"""
 
 #Export Tables to HTML Page
 with open('/var/www/html/index.html', 'w') as _file:
-    _file.write(htmltop + htmlheader + stats_dataframe_sorted.to_html(index=False, col_space=100) + htmlheader2 + advantages_dataframe_sorted.to_html(index=False, col_space=100) + htmlbottom)
+    _file.write(htmltop + htmlgameanalysis + htmlheader + stats_dataframe_sorted.to_html(index=False, col_space=100) + htmlheader2 + advantages_dataframe_sorted.to_html(index=False, col_space=100) + htmlbottom)
