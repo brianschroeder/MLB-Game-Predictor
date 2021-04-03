@@ -57,19 +57,22 @@ for games in mlb_schedule():
             continue
 
     #Get Starting Pitcher Stats
-    pitcherRequest = requests.get(f"http://statsapi.mlb.com/api/v1/game/{games}/boxscore").text
-    pitcher_json = json.loads(pitcherRequest)
+    try:
+        pitcherRequest = requests.get(f"http://statsapi.mlb.com/api/v1/game/{games}/boxscore").text
+        pitcher_json = json.loads(pitcherRequest)
 
-    homePitcher = pitcher_json['teams']['home']['pitchers'][0]
-    awayPitcher = pitcher_json['teams']['away']['pitchers'][0]
+        homePitcher = pitcher_json['teams']['home']['pitchers'][0]
+        awayPitcher = pitcher_json['teams']['away']['pitchers'][0]
 
-    homePitcherRequest = requests.get(f"http://lookup-service-prod.mlb.com/json/named.sport_career_pitching.bam?league_list_id='mlb'&game_type='R'&player_id='{homePitcher}'").text
-    homepitcherRequest_json = json.loads(homePitcherRequest)
-    awayPitcherRequest = requests.get(f"http://lookup-service-prod.mlb.com/json/named.sport_career_pitching.bam?league_list_id='mlb'&game_type='R'&player_id='{awayPitcher}'").text
-    awaypitcherRequest_json = json.loads(awayPitcherRequest)
+        homePitcherRequest = requests.get(f"http://lookup-service-prod.mlb.com/json/named.sport_career_pitching.bam?league_list_id='mlb'&game_type='R'&player_id='{homePitcher}'").text
+        homepitcherRequest_json = json.loads(homePitcherRequest)
+        awayPitcherRequest = requests.get(f"http://lookup-service-prod.mlb.com/json/named.sport_career_pitching.bam?league_list_id='mlb'&game_type='R'&player_id='{awayPitcher}'").text
+        awaypitcherRequest_json = json.loads(awayPitcherRequest)
 
-    homePitcherStats = (homepitcherRequest_json['sport_career_pitching']['queryResults']['row'])
-    awayPitcherStats = (awaypitcherRequest_json['sport_career_pitching']['queryResults']['row'])
+        homePitcherStats = (homepitcherRequest_json['sport_career_pitching']['queryResults']['row'])
+        awayPitcherStats = (awaypitcherRequest_json['sport_career_pitching']['queryResults']['row'])
+    except:
+        continue
 
     stats = {
         'Home Team': homeTeamName,
