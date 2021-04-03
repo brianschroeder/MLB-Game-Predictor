@@ -130,7 +130,7 @@ htmltop = f"""
 """
 
 htmlbottom = f"""
-<br> </br> <br></br>
+<br> </br>
 <h4> Updated Time: {updateTime} </h4>
 </body>
 </html>
