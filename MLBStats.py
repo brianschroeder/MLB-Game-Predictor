@@ -100,9 +100,9 @@ for games in mlb_schedule():
     mlb_advantages.append(advantages)
 
 stats_dataframe = pd.DataFrame(data=mlb_teamStats)
-stats_dataframe_sorted = stats_dataframe.sort_values(by='Home Team', ascending=False)
+stats_dataframe_sorted = stats_dataframe.sort_values(by='Home Team')
 advantages_dataframe = pd.DataFrame(data=mlb_advantages)
-advantages_dataframe_sorted = advantages_dataframe.sort_values(by='Home Team', ascending=False)
+advantages_dataframe_sorted = advantages_dataframe.sort_values(by='Home Team')
 
 # Set Pandas Table Output Sizing
 pd.set_option('display.max_rows', 700)
