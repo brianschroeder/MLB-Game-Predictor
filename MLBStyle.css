@@ -253,7 +253,9 @@ input, select, textarea {
 	}
 
 	p {
-		margin: 0 0 2em 0;
+		margin: 0 0 0.6em 0;
+		font-weight: 700;
+    		font-size: 85%;	
 	}
 
 	h1, h2, h3, h4, h5, h6 {
