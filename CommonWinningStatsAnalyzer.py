@@ -8,7 +8,6 @@
 import requests
 import json
 from collections import Counter
-import pandas as pd
 from prettytable import PrettyTable
 
 batting_winningStats = []
