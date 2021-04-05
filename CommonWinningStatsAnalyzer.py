@@ -5,6 +5,10 @@
     # This program gets the winner for each game and outputs the stats they were leading in.
     # The Output will be the total number of times that category was higher for the winning team vs the losing
 
+# Details
+    # Keep in mind for the pitching, most stats that are more beneficial are lower
+    # The number representation again is the amount of times the winning team has had the better stats
+
 import requests
 import json
 from collections import Counter
@@ -13,6 +17,11 @@ import pandas as pd
 batting_winningStats = []
 pitching_winningStats = []
 categories = 'batting', 'pitching'
+
+# List of Stats that are better when lower
+
+batting_stats_adjustment = "atBatsPerHomeRun", "caughtStealing", "flyOuts", "groundIntoDoublePlay", "groundIntoTriplePlay", "groundOuts", "leftOnBase", "strikeOuts"
+pitching_stats_adjustment = "airOuts", "atBats", "balks", "baseOnBalls", "battersFaced", "doubles", "earnedRuns", "era", "hitBatsmen", "hitByPitch", "hits", "homeRuns", "homeRunsPer9", "inheritedRunners", "inheritedRunnersScored", "intentionalWalks", "obp", "rbi", "runs", "runsScoredPer9", "sacBunts", "sacFlies", "stolenBasePercentage", "stolenBases", "triples", "whip", "wildPitches"
 
 def mlb_games(*gamedates):
     for gamedate in gamedates:
@@ -26,25 +35,38 @@ def mlb_games(*gamedates):
 
                 request = requests.get(f"http://statsapi.mlb.com{(game['link'])}").text
                 request_json = json.loads(request)
-                awayStats = (request_json['liveData']['boxscore']['teams']['away']['teamStats'][category])
                 homeStats = (request_json['liveData']['boxscore']['teams']['home']['teamStats'][category])
+                awayStats = (request_json['liveData']['boxscore']['teams']['away']['teamStats'][category])
 
                 try:
                     if (game['teams']['home']['isWinner']) == True:
                         for key in homeStats.keys():
-                            if homeStats[key] > awayStats[key]:
-                                if category == 'batting':
-                                    batting_winningStats.append(key)
-                                if category == 'pitching':
-                                    pitching_winningStats.append(key)
+                            if key in pitching_stats_adjustment or batting_stats_adjustment:
+                                if homeStats[key] < awayStats[key]:
+                                    if category == 'batting':
+                                        batting_winningStats.append(key)
+                                    if category == 'pitching':
+                                        pitching_winningStats.append(key)
+                            else:
+                                if homeStats[key] > awayStats[key]:
+                                    if category == 'batting':
+                                        batting_winningStats.append(key)
+                                    if category == 'pitching':
+                                        pitching_winningStats.append(key)
                     else:
                         for key in homeStats.keys():
-                            if homeStats[key] < awayStats[key]:
-                                if category == 'batting':
-                                    batting_winningStats.append(key)
-                                if category == 'pitching':
-                                    pitching_winningStats.append(key)
-
+                            if key in pitching_stats_adjustment or batting_stats_adjustment:
+                                if awayStats[key] < homeStats[key]:
+                                    if category == 'batting':
+                                        batting_winningStats.append(key)
+                                    if category == 'pitching':
+                                        pitching_winningStats.append(key)
+                            else:
+                                if awayStats[key] > homeStats[key]:
+                                    if category == 'batting':
+                                        batting_winningStats.append(key)
+                                    if category == 'pitching':
+                                        pitching_winningStats.append(key)
                 except:
                     continue
 
