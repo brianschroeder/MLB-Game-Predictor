@@ -76,7 +76,6 @@ pitching_stats_table = PrettyTable(['Stat', 'Amount of (Games) Winning Team Won 
 
 for key, val in common_batting_winning_stats.items():
    batting_stats_table.add_row([key, val])
-print(batting_stats_table)
 
 for key, val in common_pitching_winning_stats.items():
    pitching_stats_table.add_row([key, val])
