@@ -3,16 +3,13 @@
 
 # Synopsis
     # This program gets the winner for each game and outputs the stats they were leading in.
-    # The Output will be the total number of times that category was higher for the winning team vs the losing
-
-# Details
-    # Keep in mind for the pitching, most stats that are more beneficial are lower
-    # The number representation again is the amount of times the winning team has had the better stats
+    # The Output will be the total number of Games that category was higher for the winning team vs the losing
 
 import requests
 import json
 from collections import Counter
 import pandas as pd
+from prettytable import PrettyTable
 
 batting_winningStats = []
 pitching_winningStats = []
@@ -74,14 +71,24 @@ mlb_games('04/01/2021', '04/02/2021','04/03/2021','04/04/2021')
 
 common_batting_winning_stats = (dict(Counter(batting_winningStats)))
 common_pitching_winning_stats = (dict(Counter(pitching_winningStats)))
-sorted_common_batting_winning_stats = (sorted(common_batting_winning_stats.items(), key=lambda x: x[1], reverse=True))
-sorted_common_pitching_winning_stats = (sorted(common_pitching_winning_stats.items(), key=lambda x: x[1], reverse=True))
 
-batting_stats_dataframe = pd.DataFrame(data=sorted_common_batting_winning_stats, columns=['Stat', 'Winning Team Lead in Stat (Ammount of Games)'])
-pitching_stats_dataframe = pd.DataFrame(data=sorted_common_pitching_winning_stats, columns=['Stat', 'Winning Team Lead in Stat (Ammount of Games)'])
+batting_stats_table = PrettyTable(['Stat', 'Amount of (Games) Winning Team Won the Category'])
+pitching_stats_table = PrettyTable(['Stat', 'Amount of (Games) Winning Team Won the Category'])
+
+for key, val in common_batting_winning_stats.items():
+   batting_stats_table.add_row([key, val])
+print(batting_stats_table)
+
+for key, val in common_pitching_winning_stats.items():
+   pitching_stats_table.add_row([key, val])
+
+batting_stats_table.sortby = 'Amount of (Games) Winning Team Won the Category'
+pitching_stats_table.sortby = 'Amount of (Games) Winning Team Won the Category'
+batting_stats_table.reversesort = True
+pitching_stats_table.reversesort = True
 
 print('\n\nCommon Winning Leading Batting Categories\n\n')
-print(batting_stats_dataframe)
+print(batting_stats_table)
 
 print('\n\nCommon Winning Leading Pitching Categories\n\n')
-print(pitching_stats_dataframe)
+print(pitching_stats_table)
