@@ -77,8 +77,8 @@ common_pitching_winning_stats = (dict(Counter(pitching_winningStats)))
 sorted_common_batting_winning_stats = (sorted(common_batting_winning_stats.items(), key=lambda x: x[1], reverse=True))
 sorted_common_pitching_winning_stats = (sorted(common_pitching_winning_stats.items(), key=lambda x: x[1], reverse=True))
 
-batting_stats_dataframe = pd.DataFrame(data=sorted_common_batting_winning_stats)
-pitching_stats_dataframe = pd.DataFrame(data=sorted_common_pitching_winning_stats)
+batting_stats_dataframe = pd.DataFrame(data=sorted_common_batting_winning_stats, columns=['Stat', 'Winning Team Lead in Stat (Ammount of Games)'])
+pitching_stats_dataframe = pd.DataFrame(data=sorted_common_pitching_winning_stats, columns=['Stat', 'Winning Team Lead in Stat (Ammount of Games)'])
 
 print('\n\nCommon Winning Leading Batting Categories\n\n')
 print(batting_stats_dataframe)
