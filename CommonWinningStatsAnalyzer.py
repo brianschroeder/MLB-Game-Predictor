@@ -10,7 +10,9 @@ import json
 from collections import Counter
 import pandas as pd
 
-winningStat = []
+batting_winningStats = []
+pitching_winningStats = []
+categories = 'batting', 'pitching'
 
 def mlb_games(*gamedates):
     for gamedate in gamedates:
@@ -20,29 +22,44 @@ def mlb_games(*gamedates):
 
         for game in games:
 
-            request = requests.get(f"http://statsapi.mlb.com{(game['link'])}").text
-            request_json = json.loads(request)
-            awayStats = (request_json['liveData']['boxscore']['teams']['away']['teamStats']['batting'])
-            homeStats = (request_json['liveData']['boxscore']['teams']['home']['teamStats']['batting'])
+            for category in categories:
 
-            try:
-                if (game['teams']['home']['isWinner']) == True:
-                    for key in homeStats.keys():
-                        if homeStats[key] > awayStats[key]:
-                            winningStat.append(key)
-                else:
-                    for key in homeStats.keys():
-                        if homeStats[key] < awayStats[key]:
-                            winningStat.append(key)
+                request = requests.get(f"http://statsapi.mlb.com{(game['link'])}").text
+                request_json = json.loads(request)
+                awayStats = (request_json['liveData']['boxscore']['teams']['away']['teamStats'][category])
+                homeStats = (request_json['liveData']['boxscore']['teams']['home']['teamStats'][category])
 
-            except:
-                continue
+                try:
+                    if (game['teams']['home']['isWinner']) == True:
+                        for key in homeStats.keys():
+                            if homeStats[key] > awayStats[key]:
+                                if category == 'batting':
+                                    batting_winningStats.append(key)
+                                if category == 'pitching':
+                                    pitching_winningStats.append(key)
+                    else:
+                        for key in homeStats.keys():
+                            if homeStats[key] < awayStats[key]:
+                                if category == 'batting':
+                                    batting_winningStats.append(key)
+                                if category == 'pitching':
+                                    pitching_winningStats.append(key)
 
-mlb_games('04/01/2021', '04/02/2021')
+                except:
+                    continue
 
-common_winning_stats = (dict(Counter(winningStat)))
-sorted_common_winning_stats = (sorted(common_winning_stats.items(), key=lambda x: x[1], reverse=True))
+mlb_games('04/01/2021', '04/02/2021','04/03/2021','04/04/2021')
 
-stats_dataframe = pd.DataFrame(data=sorted_common_winning_stats)
+common_batting_winning_stats = (dict(Counter(batting_winningStats)))
+common_pitching_winning_stats = (dict(Counter(pitching_winningStats)))
+sorted_common_batting_winning_stats = (sorted(common_batting_winning_stats.items(), key=lambda x: x[1], reverse=True))
+sorted_common_pitching_winning_stats = (sorted(common_pitching_winning_stats.items(), key=lambda x: x[1], reverse=True))
 
-print(stats_dataframe)
+batting_stats_dataframe = pd.DataFrame(data=sorted_common_batting_winning_stats)
+pitching_stats_dataframe = pd.DataFrame(data=sorted_common_pitching_winning_stats)
+
+print('\n\nCommon Winning Leading Batting Categories\n\n')
+print(batting_stats_dataframe)
+
+print('\n\nCommon Winning Leading Pitching Categories\n\n')
+print(pitching_stats_dataframe)
