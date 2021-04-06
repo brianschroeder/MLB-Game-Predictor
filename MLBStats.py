@@ -9,7 +9,7 @@ todaysGames = datetime.datetime.now().strftime("%m/%d/%Y")
 def mlb_schedule():
     game_ids = []
 
-    request = requests.get(f"http://statsapi.mlb.com/api/v1/schedule/games/?sportId=1&date=04/06/2021").text
+    request = requests.get(f"http://statsapi.mlb.com/api/v1/schedule/games/?sportId=1&date={todaysGames}").text
     request_json = json.loads(request)
     games = (request_json['dates'][0]['games'])
     for game in games:
@@ -206,5 +206,5 @@ htmlbottom = f"""
 """
 
 # Export Tables to HTML Page
-with open('index.html', 'w') as _file:
+with open('/var/www/html/index.html', 'w') as _file:
     _file.write(htmltop + htmlgameanalysis + projectedOutcome_dataframe.to_html(index=False, col_space=100) + htmlheader + advantages_dataframe_sorted.to_html(index=False, col_space=100) + htmlheader2 + stats_dataframe_sorted.to_html(index=False,col_space=100) + htmlbottom)
