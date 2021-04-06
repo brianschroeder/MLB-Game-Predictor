@@ -10,7 +10,7 @@ def mlb_schedule():
     game_ids = []
 
     request = requests.get(f"http://statsapi.mlb.com/api/v1/schedule/games/?sportId=1&date={todaysGames}").text
-        request_json = json.loads(request)
+    request_json = json.loads(request)
     games = (request_json['dates'][0]['games'])
     for game in games:
         game_ids.append(game['gamePk'])
