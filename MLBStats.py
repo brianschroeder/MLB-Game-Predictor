@@ -165,5 +165,5 @@ htmlbottom = f"""
 """
 
 # Export Tables to HTML Page
-with open('C:/Users/brian/Desktop/index.html', 'w') as _file:
+with open('/var/www/html/index.html', 'w') as _file:
     _file.write(htmltop + htmlgameanalysis + htmlheader + advantages_dataframe_sorted.to_html(index=False, col_space=100) + htmlheader2 + stats_dataframe_sorted.to_html(index=False, col_space=100) + htmlbottom)
