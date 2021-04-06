@@ -6,15 +6,17 @@ from statistics import mean
 
 todaysGames = datetime.datetime.now().strftime("%m/%d/%Y")
 
+
 def mlb_schedule():
     game_ids = []
 
-    request = requests.get(f"http://statsapi.mlb.com/api/v1/schedule/games/?sportId=1&date={todaysGames}").text
+    request = requests.get(f"http://statsapi.mlb.com/api/v1/schedule/games/?sportId=1&date=04/02/2021").text
     request_json = json.loads(request)
     games = (request_json['dates'][0]['games'])
     for game in games:
         game_ids.append(game['gamePk'])
     return game_ids
+
 
 mlb_teamStats = []
 mlb_advantages = []
@@ -50,8 +52,7 @@ for games in mlb_schedule():
     for player in homeTeam:
         try:
             id = (player['id'])
-            request = requests.get(
-                f"http://lookup-service-prod.mlb.com/json/named.sport_career_hitting.bam?league_list_id='mlb'&game_type='R'&player_id='{id}'").text
+            request = requests.get(f"http://lookup-service-prod.mlb.com/json/named.sport_career_hitting.bam?league_list_id='mlb'&game_type='R'&player_id='{id}'").text
             request_json = json.loads(request)
             playerStats = (request_json['sport_career_hitting']['queryResults']['row'])
             homeBA.append(float(playerStats['avg']))
@@ -62,8 +63,7 @@ for games in mlb_schedule():
     for player in awayTeam:
         try:
             id = (player['id'])
-            request = requests.get(
-                f"http://lookup-service-prod.mlb.com/json/named.sport_career_hitting.bam?league_list_id='mlb'&game_type='R'&player_id='{id}'").text
+            request = requests.get(f"http://lookup-service-prod.mlb.com/json/named.sport_career_hitting.bam?league_list_id='mlb'&game_type='R'&player_id='{id}'").text
             request_json = json.loads(request)
             playerStats = (request_json['sport_career_hitting']['queryResults']['row'])
             awayBA.append(float(playerStats['avg']))
@@ -80,11 +80,9 @@ for games in mlb_schedule():
         homePitcher = pitcher_json['teams']['home']['pitchers'][0]
         awayPitcher = pitcher_json['teams']['away']['pitchers'][0]
 
-        homePitcherRequest = requests.get(
-            f"http://lookup-service-prod.mlb.com/json/named.sport_career_pitching.bam?league_list_id='mlb'&game_type='R'&player_id='{homePitcher}'").text
+        homePitcherRequest = requests.get(f"http://lookup-service-prod.mlb.com/json/named.sport_career_pitching.bam?league_list_id='mlb'&game_type='R'&player_id='{homePitcher}'").text
         homepitcherRequest_json = json.loads(homePitcherRequest)
-        awayPitcherRequest = requests.get(
-            f"http://lookup-service-prod.mlb.com/json/named.sport_career_pitching.bam?league_list_id='mlb'&game_type='R'&player_id='{awayPitcher}'").text
+        awayPitcherRequest = requests.get(f"http://lookup-service-prod.mlb.com/json/named.sport_career_pitching.bam?league_list_id='mlb'&game_type='R'&player_id='{awayPitcher}'").text
         awaypitcherRequest_json = json.loads(awayPitcherRequest)
 
         homePitcherStats = (homepitcherRequest_json['sport_career_pitching']['queryResults']['row'])
@@ -122,32 +120,36 @@ for games in mlb_schedule():
         "Away WHIP": round(float(awayPitcherStats['whip']) - float(homePitcherStats['whip']), 3) * -1
     }
 
-    #Get Game Info
+    # Get Game Info
     game_request = requests.get(f"http://statsapi.mlb.com/api/v1.1/game/{games}/feed/live").text
     game_info = json.loads(game_request)
 
-    if (advantages['Home BA']) > (advantages['Away BA']) and (advantages['Home ERA']) > (advantages['Away ERA']) and (advantages['Home WHIP']) > (advantages['Away WHIP']) and (advantages['Home Slugging %']) > (advantages['Away Slugging %']) and (advantages['Home OBP %']) > (advantages['Away OBP %']):
+    if (advantages['Home BA']) > (advantages['Away BA']) and (advantages['Home ERA']) > (advantages['Away ERA']) and (
+    advantages['Home WHIP']) > (advantages['Away WHIP']) and (advantages['Home Slugging %']) > (
+    advantages['Away Slugging %']) and (advantages['Home OBP %']) > (advantages['Away OBP %']):
         projectedWinner = {
             'Projected Winner': advantages['Home Team'],
             'Opponent': advantages['Away Team'],
             'First Pitch': f"{game_info['gameData']['datetime']['time']} {game_info['gameData']['datetime']['ampm']}",
-            'Project Winning Team Probable Pitcher': game_info['gameData']['probablePitchers']['home']['fullName'],
-            'Project Oponent Team Probable Pitcher': game_info['gameData']['probablePitchers']['away']['fullName'],
+            'Projected Winning Team Probable Pitcher': game_info['gameData']['probablePitchers']['home']['fullName'],
+            'Oponent Teams Probable Pitcher': game_info['gameData']['probablePitchers']['away']['fullName'],
             'Weather': f"{game_info['gameData']['weather']['temp']}, {game_info['gameData']['weather']['condition']}"
         }
         projectedOutcome.append(projectedWinner)
 
-    if (advantages['Away BA']) > (advantages['Home BA']) and (advantages['Away ERA']) > (advantages['Home ERA']) and (advantages['Away WHIP']) > (advantages['Home WHIP']) and (advantages['Away Slugging %']) > (advantages['Home Slugging %']) and (advantages['Away OBP %']) > (advantages['Home OBP %']):
+    if (advantages['Away BA']) > (advantages['Home BA']) and (advantages['Away ERA']) > (advantages['Home ERA']) and (
+    advantages['Away WHIP']) > (advantages['Home WHIP']) and (advantages['Away Slugging %']) > (
+    advantages['Home Slugging %']) and (advantages['Away OBP %']) > (advantages['Home OBP %']):
         projectedWinner = {
             'Projected Winner': advantages['Away Team'],
             'Opponent': advantages['Home Team'],
             'First Pitch': f"{game_info['gameData']['datetime']['time']} {game_info['gameData']['datetime']['ampm']}",
-            'Project Winning Team Probable Pitcher': game_info['gameData']['probablePitchers']['away']['fullName'],
-            'Project Oponent Team Probable Pitcher': game_info['gameData']['probablePitchers']['home']['fullName'],
+            'Projected Winning Team Probable Pitcher': game_info['gameData']['probablePitchers']['away']['fullName'],
+            'Oponent Teams Probable Pitcher': game_info['gameData']['probablePitchers']['home']['fullName'],
             'Weather': f"{game_info['gameData']['weather']['temp']}, {game_info['gameData']['weather']['condition']}"
         }
-        projectedOutcome.append(projectedWinner)
 
+        projectedOutcome.append(projectedWinner)
     mlb_teamStats.append(stats)
     mlb_advantages.append(advantages)
 
@@ -161,9 +163,6 @@ todaysDate = datetime.datetime.now().strftime("%A, %B %d, %Y")
 updateTime = datetime.datetime.now().strftime("%m/%d/%Y %I:%M:%S")
 
 htmlgameanalysis = "<h1>Game Analysis</h1>"
-
-for team in teamAdvatage:
-    htmlgameanalysis += (team)
 
 # Setup HTML for Webpage
 htmlheader = "<br></br> <h1> Team Advantages </h1>"
@@ -188,5 +187,5 @@ htmlbottom = f"""
 """
 
 # Export Tables to HTML Page
-with open('/var/www/html/index.html', 'w') as _file:
-    _file.write(htmltop + htmlgameanalysis + projectedOutcome_dataframe.to_html(index=False, col_space=100) + htmlheader + advantages_dataframe_sorted.to_html(index=False, col_space=100) + htmlheader2 + stats_dataframe_sorted.to_html(index=False, col_space=100) + htmlbottom)
+with open('c:/users/brian/desktop/index.html', 'w') as _file:
+    _file.write(htmltop + htmlgameanalysis + projectedOutcome_dataframe.to_html(index=False, col_space=100) + htmlheader + advantages_dataframe_sorted.to_html(index=False, col_space=100) + htmlheader2 + stats_dataframe_sorted.to_html(index=False,col_space=100) + htmlbottom)
