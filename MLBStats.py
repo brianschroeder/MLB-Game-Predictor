@@ -144,7 +144,6 @@ for games in mlb_schedule():
             'First Pitch': f"{game_info['gameData']['datetime']['time']} {game_info['gameData']['datetime']['ampm']}",
             'Project Winning Team Probable Pitcher': game_info['gameData']['probablePitchers']['away']['fullName'],
             'Project Oponent Team Probable Pitcher': game_info['gameData']['probablePitchers']['home']['fullName'],
-            'Project Oponent Team Probable Pitcher': game_info['gameData']['probablePitchers']['away']['fullName'],
             'Weather': f"{game_info['gameData']['weather']['temp']}, {game_info['gameData']['weather']['condition']}"
         }
         projectedOutcome.append(projectedWinner)
