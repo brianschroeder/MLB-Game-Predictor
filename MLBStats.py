@@ -9,7 +9,7 @@ todaysGames = datetime.datetime.now().strftime("%m/%d/%Y")
 def mlb_schedule():
     game_ids = []
 
-    request = requests.get(f"http://statsapi.mlb.com/api/v1/schedule/games/?sportId=1&date={todaysGames}").text
+    request = requests.get(f"http://statsapi.mlb.com/api/v1/schedule/games/?sportId=1&date=04/06/2021").text
     request_json = json.loads(request)
     games = (request_json['dates'][0]['games'])
     for game in games:
@@ -131,6 +131,8 @@ for games in mlb_schedule():
             spread = (games['SpreadSummary'])
             ou = (games['OU'])
             first_pitch = games['EventTime']
+            ml_away = games['MLVisitor']
+            ml_home = games['MLHome']
 
 
     if (advantages['Home BA']) > (advantages['Away BA']) and (advantages['Home ERA']) > (advantages['Away ERA']) and (
@@ -138,7 +140,9 @@ for games in mlb_schedule():
     advantages['Away Slugging %']) and (advantages['Home OBP %']) > (advantages['Away OBP %']):
         projectedWinner = {
             'Projected Winner': advantages['Home Team'],
+            'Winner ML': ml_home,
             'Opponent': advantages['Away Team'],
+            'Opponent ML': ml_away,
             'Spread': spread,
             'Over/Under': ou,
             'First Pitch': first_pitch,
@@ -153,7 +157,9 @@ for games in mlb_schedule():
     advantages['Home Slugging %']) and (advantages['Away OBP %']) > (advantages['Home OBP %']):
         projectedWinner = {
             'Projected Winner': advantages['Away Team'],
+            'Winner ML': ml_away,
             'Opponent': advantages['Home Team'],
+            'Opponent ML': ml_home,
             'Spread': spread,
             'Over/Under': ou,
             'First Pitch': first_pitch,
@@ -200,5 +206,5 @@ htmlbottom = f"""
 """
 
 # Export Tables to HTML Page
-with open('/var/www/html/index.html', 'w') as _file:
+with open('index.html', 'w') as _file:
     _file.write(htmltop + htmlgameanalysis + projectedOutcome_dataframe.to_html(index=False, col_space=100) + htmlheader + advantages_dataframe_sorted.to_html(index=False, col_space=100) + htmlheader2 + stats_dataframe_sorted.to_html(index=False,col_space=100) + htmlbottom)
