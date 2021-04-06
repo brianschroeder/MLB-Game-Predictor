@@ -22,6 +22,9 @@ teamAdvatage = []
 for games in mlb_schedule():
     homeBA = []
     awayBA = []
+    homeSLG = []
+    awaySLG = []
+
     request = requests.get(f"https://statsapi.mlb.com/api/v1/schedule?gamePk={games}&language=en&hydrate=lineups").text
     request_json = json.loads(request)
     try:
@@ -48,6 +51,7 @@ for games in mlb_schedule():
             request_json = json.loads(request)
             playerStats = (request_json['sport_career_hitting']['queryResults']['row'])
             homeBA.append(float(playerStats['avg']))
+            homeSLG.append(float(playerStats['slg']))
         except:
             continue
     for player in awayTeam:
@@ -58,6 +62,7 @@ for games in mlb_schedule():
             request_json = json.loads(request)
             playerStats = (request_json['sport_career_hitting']['queryResults']['row'])
             awayBA.append(float(playerStats['avg']))
+            awaySLG.append(float(playerStats['slg']))
         except:
             continue
 
@@ -85,9 +90,11 @@ for games in mlb_schedule():
         'Home Team': homeTeamName,
         "Away Team": awayTeamName,
         "Home Batting Average": round(sum(homeBA), 2),
+        "Home Slugging %": round(sum(homeSLG), 1),
         "Home Starting ERA": round(float(homePitcherStats['era']), 2),
         "Home Starting WHIP": round(float(homePitcherStats['whip']), 2),
         "Away Batting Average": round(sum(awayBA), 2),
+        "Away Slugging %": round(sum(homeSLG), 1),
         "Away Starting ERA": round(float(awayPitcherStats['era']), 2),
         "Away Starting WHIP": round(float(awayPitcherStats['whip']), 2)
     }
@@ -96,9 +103,11 @@ for games in mlb_schedule():
         'Home Team': homeTeamName,
         "Away Team": awayTeamName,
         "Home BA Advantage": round(sum(homeBA) - sum(awayBA), 2),
+        "Home Slugging % Advantage": round(sum(homeSLG) - sum(awaySLG), 2),
         "Home ERA Advantage": round(float(homePitcherStats['era']) - float(awayPitcherStats['era']), 2) * -1,
         "Home WHIP Advantage": round(float(homePitcherStats['whip']) - float(awayPitcherStats['whip']), 2) * -1,
         "Away BA Advantage": round(sum(awayBA) - sum(homeBA), 2),
+        "Away Slugging % Advantage": round(sum(awaySLG) - sum(homeSLG), 2),
         "Away ERA Advantage": round(float(awayPitcherStats['era']) - float(homePitcherStats['era']), 2) * -1,
         "Away WHIP Advantage": round(float(awayPitcherStats['whip']) - float(homePitcherStats['whip']), 2) * -1
     }
