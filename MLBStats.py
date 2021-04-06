@@ -152,6 +152,7 @@ htmltop = f"""
 <html>
 <head>
 <link rel="stylesheet" href="./MLBStyle.css">
+<link href="style.css?t=[timestamp]" type="text/css" rel="stylesheet">
 <h2> Games for: {todaysDate} </h2>
 </head>
 <body>
