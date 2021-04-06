@@ -156,7 +156,7 @@ htmltop = f"""
 <!DOCTYPE html>
 <html>
 <head>
-<link rel="stylesheet" href="./mlbstyle.css">
+<link rel="stylesheet" href="./MLBStyle.css">
 <h2> Games for: {todaysDate} </h2>
 </head>
 <body>
