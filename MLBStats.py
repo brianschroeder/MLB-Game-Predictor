@@ -10,7 +10,7 @@ def mlb_schedule():
     game_ids = []
 
     request = requests.get(f"http://statsapi.mlb.com/api/v1/schedule/games/?sportId=1&date={todaysGames}").text
-    request_json = json.loads(request)
+        request_json = json.loads(request)
     games = (request_json['dates'][0]['games'])
     for game in games:
         game_ids.append(game['gamePk'])
@@ -19,6 +19,7 @@ def mlb_schedule():
 mlb_teamStats = []
 mlb_advantages = []
 teamAdvatage = []
+projectedOutcome = []
 
 for games in mlb_schedule():
     homeBA = []
@@ -121,15 +122,37 @@ for games in mlb_schedule():
         "Away WHIP": round(float(awayPitcherStats['whip']) - float(homePitcherStats['whip']), 3) * -1
     }
 
+    #Get Game Info
+    game_request = requests.get(f"http://statsapi.mlb.com/api/v1.1/game/{games}/feed/live").text
+    game_info = json.loads(game_request)
+
     if (advantages['Home BA']) > (advantages['Away BA']) and (advantages['Home ERA']) > (advantages['Away ERA']) and (advantages['Home WHIP']) > (advantages['Away WHIP']) and (advantages['Home Slugging %']) > (advantages['Away Slugging %']) and (advantages['Home OBP %']) > (advantages['Away OBP %']):
-        teamAdvatage.append(f"<p>{advantages['Home Team']} lead the {advantages['Away Team']} in all Major Categories!</p>")
+        projectedWinner = {
+            'Projected Winner': advantages['Home Team'],
+            'Opponent': advantages['Away Team'],
+            'First Pitch': f"{game_info['gameData']['datetime']['time']} {game_info['gameData']['datetime']['ampm']}",
+            'Project Winning Team Probable Pitcher': game_info['gameData']['probablePitchers']['home']['fullName'],
+            'Project Oponent Team Probable Pitcher': game_info['gameData']['probablePitchers']['away']['fullName'],
+            'Weather': f"{game_info['gameData']['weather']['temp']}, {game_info['gameData']['weather']['condition']}"
+        }
+        projectedOutcome.append(projectedWinner)
 
     if (advantages['Away BA']) > (advantages['Home BA']) and (advantages['Away ERA']) > (advantages['Home ERA']) and (advantages['Away WHIP']) > (advantages['Home WHIP']) and (advantages['Away Slugging %']) > (advantages['Home Slugging %']) and (advantages['Away OBP %']) > (advantages['Home OBP %']):
-        teamAdvatage.append(f"<p>{advantages['Away Team']} lead the {advantages['Home Team']} in all Major Categories!</p>")
+        projectedWinner = {
+            'Projected Winner': advantages['Away Team'],
+            'Opponent': advantages['Home Team'],
+            'First Pitch': f"{game_info['gameData']['datetime']['time']} {game_info['gameData']['datetime']['ampm']}",
+            'Project Winning Team Probable Pitcher': game_info['gameData']['probablePitchers']['away']['fullName'],
+            'Project Oponent Team Probable Pitcher': game_info['gameData']['probablePitchers']['home']['fullName'],
+            'Project Oponent Team Probable Pitcher': game_info['gameData']['probablePitchers']['away']['fullName'],
+            'Weather': f"{game_info['gameData']['weather']['temp']}, {game_info['gameData']['weather']['condition']}"
+        }
+        projectedOutcome.append(projectedWinner)
 
     mlb_teamStats.append(stats)
     mlb_advantages.append(advantages)
 
+projectedOutcome_dataframe = pd.DataFrame(data=projectedOutcome)
 stats_dataframe = pd.DataFrame(data=mlb_teamStats)
 stats_dataframe_sorted = stats_dataframe.sort_values(by='Home Team')
 advantages_dataframe = pd.DataFrame(data=mlb_advantages)
@@ -167,4 +190,4 @@ htmlbottom = f"""
 
 # Export Tables to HTML Page
 with open('/var/www/html/index.html', 'w') as _file:
-    _file.write(htmltop + htmlgameanalysis + htmlheader + advantages_dataframe_sorted.to_html(index=False, col_space=100) + htmlheader2 + stats_dataframe_sorted.to_html(index=False, col_space=100) + htmlbottom)
+    _file.write(htmltop + htmlgameanalysis + projectedOutcome_dataframe.to_html(index=False, col_space=100) + htmlheader + ad
