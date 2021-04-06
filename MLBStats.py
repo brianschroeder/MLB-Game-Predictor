@@ -109,23 +109,23 @@ for games in mlb_schedule():
     advantages = {
         'Home Team': homeTeamName,
         "Away Team": awayTeamName,
-        "Home BA Advantage": round(sum(homeBA) - sum(awayBA), 3),
-        "Home Slugging % Advantage": round(sum(homeSLG) - sum(awaySLG), 3),
-        "Home OBP % Advantage": round(sum(homeOBP) - sum(awayOBP), 3),
-        "Home ERA Advantage": round(float(homePitcherStats['era']) - float(awayPitcherStats['era']), 3) * -1,
-        "Home WHIP Advantage": round(float(homePitcherStats['whip']) - float(awayPitcherStats['whip']), 3) * -1,
-        "Away BA Advantage": round(sum(awayBA) - sum(homeBA), 3),
-        "Away Slugging % Advantage": round(sum(awaySLG) - sum(homeSLG), 3),
-        "Away OBP % Advantage": round(sum(awayOBP) - sum(homeOBP), 3),
-        "Away ERA Advantage": round(float(awayPitcherStats['era']) - float(homePitcherStats['era']), 3) * -1,
-        "Away WHIP Advantage": round(float(awayPitcherStats['whip']) - float(homePitcherStats['whip']), 3) * -1
+        "Home BA": round(sum(homeBA) - sum(awayBA), 3),
+        "Home Slugging %": round(sum(homeSLG) - sum(awaySLG), 3),
+        "Home OBP %": round(sum(homeOBP) - sum(awayOBP), 3),
+        "Home ERA": round(float(homePitcherStats['era']) - float(awayPitcherStats['era']), 3) * -1,
+        "Home WHIP": round(float(homePitcherStats['whip']) - float(awayPitcherStats['whip']), 3) * -1,
+        "Away BA": round(sum(awayBA) - sum(homeBA), 3),
+        "Away Slugging %": round(sum(awaySLG) - sum(homeSLG), 3),
+        "Away OBP %": round(sum(awayOBP) - sum(homeOBP), 3),
+        "Away ERA": round(float(awayPitcherStats['era']) - float(homePitcherStats['era']), 3) * -1,
+        "Away WHIP": round(float(awayPitcherStats['whip']) - float(homePitcherStats['whip']), 3) * -1
     }
 
-    if (advantages['Home BA Advantage']) > (advantages['Away BA Advantage']) and (advantages['Home ERA Advantage']) > (advantages['Away ERA Advantage']) and (advantages['Home WHIP Advantage']) > (advantages['Away WHIP Advantage']):
-        teamAdvatage.append(f"<p>{advantages['Home Team']} lead the {advantages['Away Team']} in Batting Average, WHIP, and ERA!</p>")
+    if (advantages['Home BA']) > (advantages['Away BA']) and (advantages['Home ERA']) > (advantages['Away ERA']) and (advantages['Home WHIP']) > (advantages['Away WHIP']) and (advantages['Home Slugging %']) > (advantages['Away Slugging %']) and (advantages['Home OBP %']) > (advantages['Away OBP %']):
+        teamAdvatage.append(f"<p>{advantages['Home Team']} lead the {advantages['Away Team']} in all Major Categories!</p>")
 
-    if (advantages['Away BA Advantage']) > (advantages['Home BA Advantage']) and (advantages['Away ERA Advantage']) > (advantages['Home ERA Advantage']) and (advantages['Away WHIP Advantage']) > (advantages['Home WHIP Advantage']):
-        teamAdvatage.append(f"<p>{advantages['Away Team']} lead the {advantages['Home Team']} in Batting Average, WHIP, and ERA!</p>")
+    if (advantages['Away BA']) > (advantages['Home BA']) and (advantages['Away ERA']) > (advantages['Home ERA']) and (advantages['Away WHIP']) > (advantages['Home WHIP']) and (advantages['Away Slugging %']) > (advantages['Home Slugging %']) and (advantages['Away OBP %']) > (advantages['Home OBP %']):
+        teamAdvatage.append(f"<p>{advantages['Away Team']} lead the {advantages['Home Team']} in all Major Categories!</p>")
 
     mlb_teamStats.append(stats)
     mlb_advantages.append(advantages)
@@ -134,11 +134,6 @@ stats_dataframe = pd.DataFrame(data=mlb_teamStats)
 stats_dataframe_sorted = stats_dataframe.sort_values(by='Home Team')
 advantages_dataframe = pd.DataFrame(data=mlb_advantages)
 advantages_dataframe_sorted = advantages_dataframe.sort_values(by='Home Team')
-
-# Set Pandas Table Output Sizing
-pd.set_option('display.max_rows', 700)
-pd.set_option('display.max_columns', 700)
-pd.set_option('display.width', 350)
 
 todaysDate = datetime.datetime.now().strftime("%A, %B %d, %Y")
 updateTime = datetime.datetime.now().strftime("%m/%d/%Y %I:%M:%S")
@@ -156,7 +151,7 @@ htmltop = f"""
 <!DOCTYPE html>
 <html>
 <head>
-<link rel="stylesheet" href="./MLBStyle.css">
+<link rel="stylesheet" href="./mlbstyle.css">
 <h2> Games for: {todaysDate} </h2>
 </head>
 <body>
@@ -170,5 +165,5 @@ htmlbottom = f"""
 """
 
 # Export Tables to HTML Page
-with open('/var/www/html/index.html', 'w') as _file:
+with open('C:/Users/brian/Desktop/index.html', 'w') as _file:
     _file.write(htmltop + htmlgameanalysis + htmlheader + advantages_dataframe_sorted.to_html(index=False, col_space=100) + htmlheader2 + stats_dataframe_sorted.to_html(index=False, col_space=100) + htmlbottom)
