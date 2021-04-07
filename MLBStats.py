@@ -47,7 +47,7 @@ for games in mlb_schedule():
     homeTeam = (request_json['dates'][0]['games'][0]['lineups']['homePlayers'])
     awayTeam = (request_json['dates'][0]['games'][0]['lineups']['awayPlayers'])
 
-    # Getting Batters Carrer Averages
+    # Getting Batters Career Averages
     for player in homeTeam:
         try:
             id = (player['id'])
@@ -119,12 +119,18 @@ for games in mlb_schedule():
         "Away WHIP": round(float(awayPitcherStats['whip']) - float(homePitcherStats['whip']), 3) * -1
     }
 
+    homeAdvantage = advantages['Home BA'] + advantages['Home Slugging %'] + advantages['Home OBP %'] + advantages['Home ERA'] + advantages['Home WHIP']
+    awayAdvantage = advantages['Away BA'] + advantages['Away Slugging %'] + advantages['Away OBP %'] + advantages['Away ERA'] + advantages['Away WHIP']
+
     # Get Game Info
     game_request = requests.get(f"http://statsapi.mlb.com/api/v1.1/game/{games}/feed/live").text
     game_info = json.loads(game_request)
     odds_date_formatted = datetime.datetime.now().strftime("%Y_%m_%d")
     game_odds_request = requests.get(f"https://www.fantasylabs.com/api/sportevents/3/{odds_date_formatted}").text
     game_odds_json = json.loads(game_odds_request)
+
+    if game_info['gameData']['game']['doubleHeader'] == 'Y':
+        continue
 
     for games in game_odds_json:
         if games['HomeTeam'] == homeTeamName:
@@ -140,14 +146,16 @@ for games in mlb_schedule():
     advantages['Away Slugging %']) and (advantages['Home OBP %']) > (advantages['Away OBP %']):
         projectedWinner = {
             'Projected Winner': advantages['Home Team'],
+            'Winner Advantage (Beta)': homeAdvantage,
             'Winner ML': ml_home,
             'Opponent': advantages['Away Team'],
+            'Opponent Deficit': awayAdvantage,
             'Opponent ML': ml_away,
             'Spread': spread,
             'Over/Under': ou,
             'First Pitch': first_pitch,
             'Projected Winning Team Probable Pitcher': game_info['gameData']['probablePitchers']['home']['fullName'],
-            'Oponent Teams Probable Pitcher': game_info['gameData']['probablePitchers']['away']['fullName'],
+            'Opponent Teams Probable Pitcher': game_info['gameData']['probablePitchers']['away']['fullName'],
             'Weather': f"{game_info['gameData']['weather']['temp']}, {game_info['gameData']['weather']['condition']}"
         }
         projectedOutcome.append(projectedWinner)
@@ -157,14 +165,16 @@ for games in mlb_schedule():
     advantages['Home Slugging %']) and (advantages['Away OBP %']) > (advantages['Home OBP %']):
         projectedWinner = {
             'Projected Winner': advantages['Away Team'],
+            'Winner Advantage (Beta)': awayAdvantage,
             'Winner ML': ml_away,
             'Opponent': advantages['Home Team'],
+            'Opponent Deficit': homeAdvantage,
             'Opponent ML': ml_home,
             'Spread': spread,
             'Over/Under': ou,
             'First Pitch': first_pitch,
             'Projected Winning Team Probable Pitcher': game_info['gameData']['probablePitchers']['away']['fullName'],
-            'Oponent Teams Probable Pitcher': game_info['gameData']['probablePitchers']['home']['fullName'],
+            'Opponent Teams Probable Pitcher': game_info['gameData']['probablePitchers']['home']['fullName'],
             'Weather': f"{game_info['gameData']['weather']['temp']}, {game_info['gameData']['weather']['condition']}"
         }
 
@@ -206,5 +216,5 @@ htmlbottom = f"""
 """
 
 # Export Tables to HTML Page
-with open('/var/www/html/index.html', 'w') as _file:
+with open('index.html', 'w') as _file:
     _file.write(htmltop + htmlgameanalysis + projectedOutcome_dataframe.to_html(index=False, col_space=100) + htmlheader + advantages_dataframe_sorted.to_html(index=False, col_space=100) + htmlheader2 + stats_dataframe_sorted.to_html(index=False,col_space=100) + htmlbottom)
