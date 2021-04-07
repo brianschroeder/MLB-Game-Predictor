@@ -92,14 +92,14 @@ for games in mlb_schedule():
     stats = {
         'Home Team': homeTeamName,
         "Away Team": awayTeamName,
-        "Home Batting Average": round(sum(homeBA), 2),
-        "Home Slugging %": round(sum(homeSLG), 3),
-        "Home OBP %": round(sum(homeOBP), 3),
+        "Home Batting Average": round(mean(homeBA), 3),
+        "Home Slugging %": round(mean(homeSLG), 3),
+        "Home OBP %": round(mean(homeOBP), 3),
         "Home Starting ERA": round(float(homePitcherStats['era']), 2),
         "Home Starting WHIP": round(float(homePitcherStats['whip']), 2),
-        "Away Batting Average": round(sum(awayBA), 3),
-        "Away Slugging %": round(sum(homeSLG), 3),
-        "Away OBP %": round(sum(awayOBP), 3),
+        "Away Batting Average": round(mean(awayBA), 3),
+        "Away Slugging %": round(mean(homeSLG), 3),
+        "Away OBP %": round(mean(awayOBP), 3),
         "Away Starting ERA": round(float(awayPitcherStats['era']), 2),
         "Away Starting WHIP": round(float(awayPitcherStats['whip']), 2)
     }
@@ -107,14 +107,14 @@ for games in mlb_schedule():
     advantages = {
         'Home Team': homeTeamName,
         "Away Team": awayTeamName,
-        "Home BA": round(sum(homeBA) - sum(awayBA), 3),
-        "Home Slugging %": round(sum(homeSLG) - sum(awaySLG), 3),
-        "Home OBP %": round(sum(homeOBP) - sum(awayOBP), 3),
+        "Home BA": round(mean(homeBA) - mean(awayBA), 3),
+        "Home Slugging %": round(mean(homeSLG) - mean(awaySLG), 3),
+        "Home OBP %": round(mean(homeOBP) - mean(awayOBP), 3),
         "Home ERA": round(float(homePitcherStats['era']) - float(awayPitcherStats['era']), 3) * -1,
         "Home WHIP": round(float(homePitcherStats['whip']) - float(awayPitcherStats['whip']), 3) * -1,
-        "Away BA": round(sum(awayBA) - sum(homeBA), 3),
-        "Away Slugging %": round(sum(awaySLG) - sum(homeSLG), 3),
-        "Away OBP %": round(sum(awayOBP) - sum(homeOBP), 3),
+        "Away BA": round(mean(awayBA) - mean(homeBA), 3),
+        "Away Slugging %": round(mean(awaySLG) - mean(homeSLG), 3),
+        "Away OBP %": round(mean(awayOBP) - mean(homeOBP), 3),
         "Away ERA": round(float(awayPitcherStats['era']) - float(homePitcherStats['era']), 3) * -1,
         "Away WHIP": round(float(awayPitcherStats['whip']) - float(homePitcherStats['whip']), 3) * -1
     }
