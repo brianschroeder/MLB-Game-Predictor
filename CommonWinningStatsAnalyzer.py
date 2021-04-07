@@ -9,10 +9,15 @@ import requests
 import json
 from collections import Counter
 from prettytable import PrettyTable
+import datetime
 
 batting_winningStats = []
 pitching_winningStats = []
 categories = 'batting', 'pitching'
+
+#Format for Dates: Day,Month,Year
+startDate = "01-01-2019"
+endDate = "31-12-2019"
 
 # List of Stats that are better when lower
 
@@ -21,9 +26,13 @@ pitching_stats_adjustment = "airOuts", "atBats", "balks", "baseOnBalls", "batter
 
 def mlb_games(*gamedates):
     for gamedate in gamedates:
-        request = requests.get(f"http://statsapi.mlb.com/api/v1/schedule/games/?sportId=1&date={gamedate}").text
-        request_json = json.loads(request)
-        games = (request_json['dates'][0]['games'])
+
+        try:
+            request = requests.get(f"http://statsapi.mlb.com/api/v1/schedule/games/?sportId=1&date={gamedate}").text
+            request_json = json.loads(request)
+            games = (request_json['dates'][0]['games'])
+        except:
+            continue
 
         for game in games:
 
@@ -66,7 +75,19 @@ def mlb_games(*gamedates):
                 except:
                     continue
 
-mlb_games('04/01/2021', '04/02/2021','04/03/2021','04/04/2021')
+def dateRange(startDate,endDate):
+    dates = []
+    start = datetime.datetime.strptime(f"{startDate}", "%d-%m-%Y")
+    end = datetime.datetime.strptime(f"{endDate}", "%d-%m-%Y")
+    date_generated = [start + datetime.timedelta(days=x) for x in range(0, (end-start).days)]
+    for date in date_generated:
+        dates.append(date.strftime("%m/%d/%Y"))
+    return(dates)
+
+dates = dateRange(startDate,endDate)
+
+for date in dates:
+    mlb_games(date)
 
 common_batting_winning_stats = (dict(Counter(batting_winningStats)))
 common_pitching_winning_stats = (dict(Counter(pitching_winningStats)))
