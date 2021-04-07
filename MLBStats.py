@@ -184,7 +184,7 @@ updateTime = datetime.datetime.now().strftime("%m/%d/%Y %I:%M:%S")
 htmlgameanalysis = "<h1>Game Analysis</h1>"
 
 # Setup HTML for Webpage
-htmlheader = "<br></br> <h1> Team Advantages </h1>"
+htmlheader = "<br></br> <h1> Team Advantages (Differences) </h1>"
 htmlheader2 = "<h1>Team Statistics</h1>"
 
 htmltop = f"""
