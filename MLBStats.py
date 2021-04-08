@@ -198,8 +198,8 @@ for games in mlb_schedule():
 
 projectedOutcome_dataframe = pd.DataFrame(data=projectedOutcome)
 stats_dataframe = pd.DataFrame(data=mlb_teamStats)
-stats_dataframe_sorted = stats_dataframe.sort_values(by='Home Team')
 advantages_dataframe = pd.DataFrame(data=mlb_advantages)
+stats_dataframe_sorted = stats_dataframe.sort_values(by='Home Team')
 advantages_dataframe_sorted = advantages_dataframe.sort_values(by='Home Team')
 
 todaysDate = datetime.datetime.now().strftime("%A, %B %d, %Y")
@@ -209,7 +209,9 @@ htmlgameanalysis = "<h1>Game Analysis</h1>"
 
 # Setup HTML for Webpage
 htmlheader = "<br></br> <h1> Team Advantages (Differences) </h1>"
+
 htmlheader2 = "<h1>Team Statistics</h1>"
+
 
 htmltop = f"""
 <!DOCTYPE html>
@@ -217,9 +219,13 @@ htmltop = f"""
 <head>
 <link rel="stylesheet" href="./MLBStyle.css">
 <link href="style.css?t=[timestamp]" type="text/css" rel="stylesheet">
-<h2> Games for: {todaysDate} </h2>
+<div class="topnav">
+  <a class="active" href="#home">Home</a>
+</div>
 </head>
 <body>
+<h1> Welcome to MLB Game Predictor</h1>
+<h2> {todaysDate} </h2>
 """
 
 htmlbottom = f"""
