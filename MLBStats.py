@@ -205,7 +205,9 @@ advantages_dataframe_sorted = advantages_dataframe.sort_values(by='Home Team')
 todaysDate = datetime.datetime.now().strftime("%A, %B %d, %Y")
 updateTime = datetime.datetime.now().strftime("%m/%d/%Y %I:%M:%S")
 
-htmlgameanalysis = "<h1>Game Analysis</h1>"
+htmlgameanalysis = """<h1>Game Analysis</h1>
+<h3>Note: Once our Data shows a favorable matchup, the Game information will appear below</h3>
+"""
 
 # Setup HTML for Webpage
 htmlheader = "<br></br> <h1> Team Advantages (Differences) </h1>"
