@@ -1,1 +1,3 @@
-# MLB Game Predictor
+# MLB Game Predictor Data Science Tools
+
+## Author Brian Schroeder
