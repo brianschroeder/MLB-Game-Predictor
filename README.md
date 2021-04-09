@@ -2,6 +2,10 @@
 
 ## Author Brian Schroeder
 
+## Overview
+The goal of this project was to gather data from previos games and years, create a program to gather the most common stats that effected a Teams Winning Percentage, and
+predict future games based off a model that was created from the data gained from the historical analysis.
+
 #### The first script created was the Common_Winning_Stats_Analyzer.py
 
 The goal of this script is to determine which categories such as a Teams Batting Average and ERA effect the outcome of the Game the most. This script has been designed
