@@ -14,7 +14,7 @@ The stats that effected a Baseball Teams ability to win is split into two catego
 
 Hitting VS opposing Team Stats 
 
-1. Lower Ammount of Strikeouts
+1. Lower Amount of Strikeouts
 2. Lower Amount of Batters Left on Base
 3. Higher Batting Average
 4. Higher On Base Percentage
