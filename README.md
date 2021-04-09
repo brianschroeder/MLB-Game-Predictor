@@ -14,22 +14,23 @@ Stats the Winning Teams had in Common after the Victory
 
 Hitting VS opposing Team Stats
 
-Lower Amount of Strikeouts
-Lower Amount of Batters Left on Base
-Higher Batting Average
-Higher On Base Percentage
-Higher OPS
-Higher Slugging Percentage
-Higher Amount of Homeruns Per at bat
-Pitching VS opposing Teams Stats (Lower is better in most cases in Pitching)
+Lower Amount of Strikeouts  
+Lower Amount of Batters Left on Base  
+Higher Batting Average  
+Higher On Base Percentage  
+Higher OPS  
+Higher Slugging Percentage  
+Higher Amount of Homeruns Per at bat  
+Pitching VS opposing Teams Stats (Lower is better in most cases in Pitching)  
 
-Lower on Base Percentage
-Lower Hits allowed
-Lower HomeRuns Per 9 innings
-Lower ERA
-Lower WHIP
-Lower Base on Balls
-Lower Stolen Base Percentage (Interesting)
+Lower on Base Percentage  
+Lower Hits allowed  
+Lower HomeRuns Per 9 innings  
+Lower ERA  
+Lower WHIP  
+Lower Base on Balls 
+Lower Stolen Base Percentage (Interesting) 
+
 Now that we have the categories the winning Teams had in common, we now will build our algorithm that will determine which of these stats above in combination lead to the most amount of correct predication for the team winning.
 
 Example: Home Batting Average > Away Batting Average and Home ERA > Away ERA
