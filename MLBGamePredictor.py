@@ -138,8 +138,8 @@ for games in mlb_schedule():
         "Away BB/9 Against": (round(float(awayPitcherStats['bb9']), 2) - round(float(homePitcherStats['bb9']), 2)) * -1,
     }
 
-    homeAdvantage = advantages['Home BA'] + advantages['Home Slugging %'] + advantages['Home OBP %'] + advantages['Home ERA'] + advantages['Home WHIP'] + advantages['Home Homeruns/9 Against'] + advantages['Home OBP Against'] + advantages['Home BB/9 Against']
-    awayAdvantage = advantages['Away BA'] + advantages['Away Slugging %'] + advantages['Away OBP %'] + advantages['Away ERA'] + advantages['Away WHIP'] + advantages['Away Homeruns/9 Against'] + advantages['Away OBP Against'] + advantages['Away BB/9 Against']
+    homeAdvantage = advantages['Home SO %'] + ['Home Slugging %'] + ['Home ERA']  + ['Home Homeruns/9 Against'] + ['Home OBP Against']
+    awayAdvantage = advantages['Away SO %'] + ['Away Slugging %'] + ['Away ERA'] + ['Away Homeruns/9 Against'] + ['Away OBP Against']
 
     # Get Game Info
     game_request = requests.get(f"http://statsapi.mlb.com/api/v1.1/game/{games}/feed/live").text
