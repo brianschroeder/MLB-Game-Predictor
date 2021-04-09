@@ -31,21 +31,21 @@ for games in mlb_schedule():
     awayOBP = []
 
     request = requests.get(f"https://statsapi.mlb.com/api/v1/schedule?gamePk={games}&language=en&hydrate=lineups").text
-    request_json = json.loads(request)
+    games_request_json = json.loads(request)
     try:
-        (request_json['dates'][0]['games'][0]['lineups']['homePlayers'])
+        (games_request_json['dates'][0]['games'][0]['lineups']['homePlayers'])
     except:
         continue
 
     try:
-        (request_json['dates'][0]['games'][0]['lineups']['awayPlayers'])
+        (games_request_json['dates'][0]['games'][0]['lineups']['awayPlayers'])
     except:
         continue
 
-    homeTeamName = (request_json['dates'][0]['games'][0]['teams']['home']['team']['name'])
-    awayTeamName = (request_json['dates'][0]['games'][0]['teams']['away']['team']['name'])
-    homeTeam = (request_json['dates'][0]['games'][0]['lineups']['homePlayers'])
-    awayTeam = (request_json['dates'][0]['games'][0]['lineups']['awayPlayers'])
+    homeTeamName = (games_request_json['dates'][0]['games'][0]['teams']['home']['team']['name'])
+    awayTeamName = (games_request_json['dates'][0]['games'][0]['teams']['away']['team']['name'])
+    homeTeam = (games_request_json['dates'][0]['games'][0]['lineups']['homePlayers'])
+    awayTeam = (games_request_json['dates'][0]['games'][0]['lineups']['awayPlayers'])
 
     # Getting Batters Career Averages
     for player in homeTeam:
@@ -152,6 +152,26 @@ for games in mlb_schedule():
             ml_away = games['MLVisitor']
             ml_home = games['MLHome']
 
+    try:
+        if (games_request_json['dates'][0]['games'][0]['teams']['home']['isWinner']) == True:
+            homeWinner = 'Yes'
+        elif (games_request_json['dates'][0]['games'][0]['teams']['home']['isWinner']) == False:
+            homeWinner = 'No'
+        else:
+            homeWinner = 'TBD'
+    except:
+        homeWinner = 'TBD'
+
+    try:
+        if (games_request_json['dates'][0]['games'][0]['teams']['away']['isWinner']) == True:
+            awayWinner = 'Yes'
+        elif (games_request_json['dates'][0]['games'][0]['teams']['away']['isWinner']) == False:
+            awayWinner = 'No'
+        else:
+            awayWinner = 'TBD'
+    except:
+        awayWinner = 'TBD'
+
 
     if (advantages['Home BA']) > (advantages['Away BA']) and (advantages['Home ERA']) > (advantages['Away ERA']) and (
     advantages['Home WHIP']) > (advantages['Away WHIP']) and (advantages['Home Slugging %']) > (
@@ -169,6 +189,8 @@ for games in mlb_schedule():
             'First Pitch': first_pitch,
             'Projected Winning Team Probable Pitcher': game_info['gameData']['probablePitchers']['home']['fullName'],
             'Opponent Teams Probable Pitcher': game_info['gameData']['probablePitchers']['away']['fullName'],
+            'Winner': homeWinner,
+            'Score': f"{advantages['Home Team']}: {games_request_json['dates'][0]['games'][0]['teams']['home']['score']}  {advantages['Away Team']}: {games_request_json['dates'][0]['games'][0]['teams']['away']['score']} ",
             'Weather': f"{game_info['gameData']['weather']['temp']}, {game_info['gameData']['weather']['condition']}"
         }
         projectedOutcome.append(projectedWinner)
@@ -189,6 +211,8 @@ for games in mlb_schedule():
             'First Pitch': first_pitch,
             'Projected Winning Team Probable Pitcher': game_info['gameData']['probablePitchers']['away']['fullName'],
             'Opponent Teams Probable Pitcher': game_info['gameData']['probablePitchers']['home']['fullName'],
+            'Winner': awayWinner,
+            'Score': f"{advantages['Away Team']}: {games_request_json['dates'][0]['games'][0]['teams']['away']['score']}  {advantages['Home Team']}: {games_request_json['dates'][0]['games'][0]['teams']['home']['score']} ",
             'Weather': f"{game_info['gameData']['weather']['temp']}, {game_info['gameData']['weather']['condition']}"
         }
 
@@ -238,5 +262,5 @@ htmlbottom = f"""
 """
 
 # Export Tables to HTML Page
-with open('/var/www/html/index.html', 'w') as _file:
+with open('index.html', 'w') as _file:
     _file.write(htmltop + htmlgameanalysis + projectedOutcome_dataframe.to_html(index=False) + htmlheader + advantages_dataframe_sorted.to_html(index=False) + htmlheader2 + stats_dataframe_sorted.to_html(index=False) + htmlbottom)
