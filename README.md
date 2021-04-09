@@ -10,9 +10,9 @@ The stats that effected a Baseball Teams ability to win is split into two catego
 
 Excluding the obvious stats such as runs and RBIs
 
-Stats the Winning Teams had in Common after the Victory
+# Common Stats Amoung Winning Teams
 
-Hitting VS opposing Team Stats
+## Hitting VS opposing Team Stats
 
 Lower Amount of Strikeouts  
 Lower Amount of Batters Left on Base  
@@ -21,7 +21,8 @@ Higher On Base Percentage
 Higher OPS  
 Higher Slugging Percentage  
 Higher Amount of Homeruns Per at bat  
-Pitching VS opposing Teams Stats (Lower is better in most cases in Pitching)  
+
+## Pitching VS opposing Teams Stats (Lower is better in most cases in Pitching)  
 
 Lower on Base Percentage  
 Lower Hits allowed  
@@ -32,6 +33,8 @@ Lower Base on Balls
 Lower Stolen Base Percentage (Interesting) 
 
 Now that we have the categories the winning Teams had in common, we now will build our algorithm that will determine which of these stats above in combination lead to the most amount of correct predication for the team winning.
+
+# Winning Stats Combination Algorithm
 
 Example: Home Batting Average > Away Batting Average and Home ERA > Away ERA
 
@@ -50,6 +53,8 @@ Note: The API's I used all had historical data which helped in running the testi
 From there, I picked the top algorithm which picked the correct winning team the highest percentage of times and implemented that into my daily running MLB Game Predictor.
 
 The secret sauce as of right now (Pending more stats being included in the algorithm testing) is:
+
+## Results
 
 Note: In situations where a lower stat is better such as strike out percentage the has already been factored in when using the greater than operator.
 
