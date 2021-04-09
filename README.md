@@ -38,3 +38,15 @@ Pitching VS opposing Teams Stats (Lower is better in most cases in Pitching)
 6. Lower Base on Balls
 7. Lower Stolen Base Percentage (Interesting)
 
+Now that we have the categoires the winning Teams had in common, we now will build our algorithm that will determine which of these stats above in combination lead to the most ammount of correct predicition for the team winning.
+
+Example: Home Batting Average > Away Batting Average and Home ERA > Away ERA
+
+To accomplish this, I started by programaticlly testing each stat one by one and adding another stat to the list and would continue testing each combination to get the winning percentage. 
+
+I soon then realised that this method is not testing each possible combination of stats, as it's running sequentually. '
+
+So if Batting Average was at the Beginning of the testing and ERA was at the end, these two stats would never be tested indendently with eachother.
+
+So I updated my code to get every possible combination of stats that were passed, then run the prediction tests to see which unique algorithms would result in a win.
+
