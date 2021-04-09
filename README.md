@@ -8,6 +8,10 @@ predict future games based off a model that was created from the data gained fro
 
 ## Findings
 
+First I needed to get the Data for the most common stats that the Winning Teams had in common over a period of time.
+
+I wrote a program to get each game that was played over a time period, got the winnner of the game, retrieved each catgory the team beat the losing team in and put that data into a table and grouped it by that stat (Example Batting Average.) Then, I was able to determine which stats were present the most amound the winning teams.
+
 The stats that effected a Baseball Teams ability to win is split into two categories: Hitting and Pitching. Any Baseball fan knows the game, knows you can't have one without the other. 
 
 *Exluding the obvious stats such as runs and RBIs*
