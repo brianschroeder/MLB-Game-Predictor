@@ -16,7 +16,6 @@ def mlb_schedule():
         game_ids.append(game['gamePk'])
     return game_ids
 
-
 mlb_teamStats = []
 mlb_advantages = []
 teamAdvatage = []
@@ -29,6 +28,8 @@ for games in mlb_schedule():
     awaySLG = []
     homeOBP = []
     awayOBP = []
+    homeSO = []
+    awaySO = []
 
     request = requests.get(f"https://statsapi.mlb.com/api/v1/schedule?gamePk={games}&language=en&hydrate=lineups").text
     games_request_json = json.loads(request)
@@ -57,6 +58,7 @@ for games in mlb_schedule():
             homeBA.append(float(playerStats['avg']))
             homeSLG.append(float(playerStats['slg']))
             homeOBP.append(float(playerStats['obp']))
+            homeSO.append(float(playerStats['so']) / float(playerStats['ab']))
         except:
             continue
     for player in awayTeam:
@@ -68,6 +70,7 @@ for games in mlb_schedule():
             awayBA.append(float(playerStats['avg']))
             awaySLG.append(float(playerStats['slg']))
             awayOBP.append(float(playerStats['obp']))
+            awaySO.append(float(playerStats['so']) / float(playerStats['ab']))
         except:
             continue
 
@@ -95,6 +98,7 @@ for games in mlb_schedule():
         "Home Batting Average": round(mean(homeBA), 3),
         "Home Slugging %": round(mean(homeSLG), 3),
         "Home OBP %": round(mean(homeOBP), 3),
+        "Home SO %": round(mean(homeSO)) * -1,
         "Home Starting ERA": round(float(homePitcherStats['era']), 2),
         "Home Starting WHIP": round(float(homePitcherStats['whip']), 2),
         "Home Starting OBP Against": round(float(homePitcherStats['obp']), 2),
@@ -103,6 +107,7 @@ for games in mlb_schedule():
         "Away Batting Average": round(mean(awayBA), 3),
         "Away Slugging %": round(mean(homeSLG), 3),
         "Away OBP %": round(mean(awayOBP), 3),
+        "Away SO %": round(mean(awaySO)) * -1,
         "Away Starting ERA": round(float(awayPitcherStats['era']), 2),
         "Away Starting WHIP": round(float(awayPitcherStats['whip']), 2),
         "Away Starting OBP Against": round(float(awayPitcherStats['obp']), 2),
@@ -116,6 +121,7 @@ for games in mlb_schedule():
         "Home BA": round(mean(homeBA) - mean(awayBA), 3),
         "Home Slugging %": round(mean(homeSLG) - mean(awaySLG), 3),
         "Home OBP %": round(mean(homeOBP) - mean(awayOBP), 3),
+        "Home SO %": round(mean(homeSO) - mean(awaySO), 3) * -1,
         "Home ERA": round(float(homePitcherStats['era']) - float(awayPitcherStats['era']), 3) * -1,
         "Home WHIP": round(float(homePitcherStats['whip']) - float(awayPitcherStats['whip']), 3) * -1,
         "Home OBP Against": (round(float(homePitcherStats['obp']), 2) - round(float(awayPitcherStats['obp']), 2)) * -1,
@@ -124,6 +130,7 @@ for games in mlb_schedule():
         "Away BA": round(mean(awayBA) - mean(homeBA), 3),
         "Away Slugging %": round(mean(awaySLG) - mean(homeSLG), 3),
         "Away OBP %": round(mean(awayOBP) - mean(homeOBP), 3),
+        "Away SO %": round(mean(awaySO) - mean(homeSO), 3) * -1,
         "Away ERA": round(float(awayPitcherStats['era']) - float(homePitcherStats['era']), 3) * -1,
         "Away WHIP": round(float(awayPitcherStats['whip']) - float(homePitcherStats['whip']), 3) * -1,
         "Away OBP Against": (round(float(awayPitcherStats['obp']), 2) - round(float(homePitcherStats['obp']), 2)) * -1,
