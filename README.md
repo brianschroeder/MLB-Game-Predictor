@@ -16,6 +16,8 @@ The stats that effected a Baseball Teams ability to win is split into two catego
 
 *Exluding the obvious stats such as runs and RBIs*
 
+**Stats the Winning Teams had in Common after the Victory**
+
 Hitting VS opposing Team Stats 
 
 1. Lower Amount of Strikeouts
