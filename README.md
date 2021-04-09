@@ -3,7 +3,7 @@
 ## Author Brian Schroeder
 
 ## Overview
-The goal of this project was to gather data from previous games and years, create a program to gather the most common stats that effected a Teams Winning Percentage, and
+The goal of this project is to gather data from previous games and years, create a program to gather the most common stats that effected a Teams Winning Percentage, and
 predict future games based off a model that was created from the data gained from the historical analysis.
 
 ## Findings
