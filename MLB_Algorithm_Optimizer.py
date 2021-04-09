@@ -21,8 +21,8 @@ import datetime
 import pandas as pd
 
 #Format for Dates: Day,Month,Year
-startDate = "01-04-2021"
-endDate = "03-04-2021"
+startDate = "01-04-2019"
+endDate = "30-11-2019"
 
 def dateRange(startDate,endDate):
     dates = []
@@ -245,7 +245,16 @@ winPercentage = df_algorithm_stats["Did Projected Win"] / df_algorithm_stats["To
 df_algorithm_stats["Win Percentage"] = winPercentage
 df_algorithm_winpercentage_sorted = (df_algorithm_stats.sort_values(by=['Win Percentage'], ascending=False))
 pd.set_option('display.max_rows', None)
-pd.set_option('display.max_columns', None)
-pd.set_option('display.width', 100000)
+df_algorithm_winpercentage_sorted.to_csv(r'test.csv',  header=True)
 
-print(df_algorithm_winpercentage_sorted)
+# Algorithm	Projected Won	Opponent Won	Total Games	Win Percentage
+# advantages['Home SO %'] > advantages['Away SO %'] and advantages['Home Slugging %'] > advantages['Away Slugging %'] and advantages['Home ERA'] > advantages['Away ERA'] and advantages['Home Homeruns/9 Against'] > advantages['Away Homeruns/9 Against'] and advantages['Home OBP Against'] > advantages['Away OBP Against'] 	236	92	328	71.95%
+# advantages['Home BA'] > advantages['Away BA'] and advantages['Home SO %'] > advantages['Away SO %'] and advantages['Home Slugging %'] > advantages['Away Slugging %'] and advantages['Home OBP %'] > advantages['Away OBP %'] and advantages['Home ERA'] > advantages['Away ERA'] and advantages['Home WHIP'] > advantages['Away WHIP']	234	92	326	71.78%
+# advantages['Home SO %'] > advantages['Away SO %'] and advantages['Home Slugging %'] > advantages['Away Slugging %'] and advantages['Home ERA'] > advantages['Away ERA'] and advantages['Home WHIP'] > advantages['Away WHIP'] and advantages['Home Homeruns/9 Against'] > advantages['Away Homeruns/9 Against'] and advantages['Home OBP Against'] > advantages['Away OBP Against'] 	234	92	326	71.78%
+# advantages['Home BA'] > advantages['Away BA'] and advantages['Home SO %'] > advantages['Away SO %'] and advantages['Home Slugging %'] > advantages['Away Slugging %'] and advantages['Home ERA'] > advantages['Away ERA'] and advantages['Home Homeruns/9 Against'] > advantages['Away Homeruns/9 Against'] and advantages['Home OBP Against'] > advantages['Away OBP Against'] 	210	83	293	71.67%
+# advantages['Home SO %'] > advantages['Away SO %'] and advantages['Home Slugging %'] > advantages['Away Slugging %'] and advantages['Home ERA'] > advantages['Away ERA'] and advantages['Home WHIP'] > advantages['Away WHIP'] and advantages['Home Homeruns/9 Against'] > advantages['Away Homeruns/9 Against'] and advantages['Home OBP Against'] > advantages['Away OBP Against']  and advantages['Home BB/9 Against'] > advantages['Away BB/9 Against']	182	72	254	71.65%
+# advantages['Home SO %'] > advantages['Away SO %'] and advantages['Home Slugging %'] > advantages['Away Slugging %'] and advantages['Home ERA'] > advantages['Away ERA'] and advantages['Home Homeruns/9 Against'] > advantages['Away Homeruns/9 Against'] and advantages['Home OBP Against'] > advantages['Away OBP Against']  and advantages['Home BB/9 Against'] > advantages['Away BB/9 Against']	182	72	254	71.65%
+# advantages['Home SO %'] > advantages['Away SO %'] and advantages['Home Slugging %'] > advantages['Away Slugging %'] and advantages['Home OBP %'] > advantages['Away OBP %'] and advantages['Home ERA'] > advantages['Away ERA'] and advantages['Home WHIP'] > advantages['Away WHIP']	250	99	349	71.63%
+# advantages['Home SO %'] > advantages['Away SO %'] and advantages['Home Slugging %'] > advantages['Away Slugging %'] and advantages['Home WHIP'] > advantages['Away WHIP'] and advantages['Home Homeruns/9 Against'] > advantages['Away Homeruns/9 Against'] and advantages['Home OBP Against'] > advantages['Away OBP Against']  and advantages['Home BB/9 Against'] > advantages['Away BB/9 Against']	194	77	271	71.59%
+# advantages['Home SO %'] > advantages['Away SO %'] and advantages['Home Slugging %'] > advantages['Away Slugging %'] and advantages['Home Homeruns/9 Against'] > advantages['Away Homeruns/9 Against'] and advantages['Home OBP Against'] > advantages['Away OBP Against']  and advantages['Home BB/9 Against'] > advantages['Away BB/9 Against']	194	77	271	71.59%
+# advantages['Home BA'] > advantages['Away BA'] and advantages['Home SO %'] > advantages['Away SO %'] and advantages['Home Slugging %'] > advantages['Away Slugging %'] and advantages['Home ERA'] > advantages['Away ERA'] and advantages['Home WHIP'] > advantages['Away WHIP'] and advantages['Home Homeruns/9 Against'] > advantages['Away Homeruns/9 Against'] and advantages['Home OBP Against'] > advantages['Away OBP Against'] 	208	83	291	71.48%
