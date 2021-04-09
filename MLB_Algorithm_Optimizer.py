@@ -229,7 +229,10 @@ for gameDate in gameDates:
                     continue
 
 algorithm_Analyzer = (dict(Counter(analysis_comparison)))
-algorithm_Analyzer_Table = PrettyTable(['Stat', 'Amount of (Games) Winning Team Won the Category'])
+algorithm_Analyzer_Table = PrettyTable(['Stat', 'Amount of (Games) Won'])
 for val, key in algorithm_Analyzer.items():
    algorithm_Analyzer_Table.add_row([val, key])
+
+algorithm_Analyzer_Table.sortby = 'Amount of (Games) Won'
+algorithm_Analyzer_Table.reversesort = True
 print(algorithm_Analyzer_Table)
