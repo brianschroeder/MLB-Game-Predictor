@@ -173,7 +173,7 @@ for games in mlb_schedule():
         awayWinner = 'TBD'
 
 
-   if advantages['Home SO %'] > advantages['Away SO %'] and advantages['Home Slugging %'] > advantages['Away Slugging %'] and advantages['Home ERA'] > advantages['Away ERA'] and advantages['Home Homeruns/9 Against'] > advantages['Away Homeruns/9 Against'] and advantages['Home OBP Against'] > advantages['Away OBP Against']:
+    if advantages['Home SO %'] > advantages['Away SO %'] and advantages['Home Slugging %'] > advantages['Away Slugging %'] and advantages['Home ERA'] > advantages['Away ERA'] and advantages['Home Homeruns/9 Against'] > advantages['Away Homeruns/9 Against'] and advantages['Home OBP Against'] > advantages['Away OBP Against']:
         projectedWinner = {
             'Projected Winner': advantages['Home Team'],
             'Winner Advantage (Beta)': homeAdvantage,
