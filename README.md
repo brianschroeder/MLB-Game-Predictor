@@ -50,3 +50,17 @@ So if Batting Average was at the Beginning of the testing and ERA was at the end
 
 So I updated my code to get every possible combination of stats that were passed, then run the prediction tests to see which unique algorithms would result in a win.
 
+I took the number of times the algorithm predicted a team would win, then compared it againt the actual result of the game. I compared the total number of times the algorithm was correct in predicting the winning team vs how many totals were predicted to win, and that gave me the winning percentage for the algorithm.
+
+Note: The API's I used all had historical data which helped in running the testing over a series of time.
+
+From there, I picked the top algorithm which picked the correct winning team the highest percentage of times and implented that into my daily running MLB Game Predictor.
+
+The secert sauce as of right now (*Pending more stats being included in the algorithm testing*) is:
+
+*Note: In situations where a lower stat is better such as strike out percentage the has already been factored in when using the greater than operator.*
+
+Home Strike Out % > Away Strike Out% and Home Slugging % > Away Slugging % and Home ERA > Away ERA and Home Homeruns/9 Against > Away Homeruns/9 Against and Home OBP Against > Away OBP Against: 
+
+71.95% Win Rate (Total Wins Predicted: 328, Predicted Actual Wins: 236)
+
