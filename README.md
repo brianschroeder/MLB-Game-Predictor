@@ -14,25 +14,27 @@ Excluding the obvious stats such as runs and RBIs
 
 ## Hitting VS opposing Team Stats
 
-Lower Amount of Strikeouts  
-Lower Amount of Batters Left on Base  
-Higher Batting Average  
-Higher On Base Percentage  
-Higher OPS  
-Higher Slugging Percentage  
-Higher Amount of Homeruns Per at bat  
+1. Lower Amount of Strikeouts  
+2. Lower Amount of Batters Left on Base  
+3. Higher Batting Average  
+4. Higher On Base Percentage  
+5. Higher OPS  
+6. Higher Slugging Percentage  
+7. Higher Amount of Homeruns Per at bat  
 
 ![alt text](https://github.com/brianschroeder/MLB-Game-Predictor/blob/main/Winning%20Common%20Hitting.png?raw=true)
 
 ## Pitching VS opposing Teams Stats (Lower is better in most cases in Pitching)  
 
-Lower on Base Percentage  
-Lower Hits allowed  
-Lower HomeRuns Per 9 innings  
-Lower ERA  
-Lower WHIP  
-Lower Base on Balls  
-Lower Stolen Base Percentage (Interesting) 
+1. Lower on Base Percentage  
+2. Lower Hits allowed  
+3. Lower HomeRuns Per 9 innings  
+4. Lower ERA  
+5. Lower WHIP  
+6. Lower Base on Balls  
+7. Lower Stolen Base Percentage (Interesting) 
+
+![alt text](https://github.com/brianschroeder/MLB-Game-Predictor/blob/d70e33042524982b5d414ce78f3c195a9950d17c/Winning%20Common%20Pitching%20Categories.png?raw=true)
 
 Now that we have the categories the winning Teams had in common, we now will build our algorithm that will determine which of these stats above in combination lead to the most amount of correct predication for the team winning.
 
