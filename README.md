@@ -32,5 +32,3 @@ Pitching VS opposing Teams Stats (Lower is better in most cases in Pitching)
 6. Base on Balls
 7. Stolen Base Percentage (Interesting)
 
-
-### By having all the categories that effected and helped the Winning Team, I was then able to created the algorithm that is the most efficient in predicating the Winning Team.
