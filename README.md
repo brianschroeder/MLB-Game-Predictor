@@ -22,6 +22,8 @@ Higher OPS
 Higher Slugging Percentage  
 Higher Amount of Homeruns Per at bat  
 
+![alt text](https://github.com/brianschroeder/MLB-Game-Predictor/blob/2e12f97dde02dfe5156a706c78c3871e45a23500/Winning%20Common%20Hitting%20Categories.png?raw=true)
+
 ## Pitching VS opposing Teams Stats (Lower is better in most cases in Pitching)  
 
 Lower on Base Percentage  
