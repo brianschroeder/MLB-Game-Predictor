@@ -31,7 +31,7 @@ Lower Hits allowed
 Lower HomeRuns Per 9 innings  
 Lower ERA  
 Lower WHIP  
-Lower Base on Balls 
+Lower Base on Balls  
 Lower Stolen Base Percentage (Interesting) 
 
 Now that we have the categories the winning Teams had in common, we now will build our algorithm that will determine which of these stats above in combination lead to the most amount of correct predication for the team winning.
