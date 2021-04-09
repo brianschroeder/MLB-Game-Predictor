@@ -28,7 +28,7 @@ Pitching VS opposing Teams Stats (Lower is better in most cases in Pitching)
 2. Lower Hits allowed
 3. Lower HomeRuns Per 9 innings
 4. Lower ERA
-5. WHIP
-6. Base on Balls
-7. Stolen Base Percentage (Interesting)
+5. Lower WHIP
+6. Lower Base on Balls
+7. Lower Stolen Base Percentage (Interesting)
 
