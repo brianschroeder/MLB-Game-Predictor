@@ -17,12 +17,12 @@ import requests
 import json
 from statistics import mean
 from collections import Counter
-from prettytable import PrettyTable
 import datetime
+import pandas as pd
 
 #Format for Dates: Day,Month,Year
-startDate = "02-04-2021"
-endDate = "04-04-2021"
+startDate = "01-04-2021"
+endDate = "03-04-2021"
 
 def dateRange(startDate,endDate):
     dates = []
@@ -36,6 +36,7 @@ def dateRange(startDate,endDate):
 gameDates = dateRange(startDate,endDate)
 
 analysis_comparison = []
+
 for gameDate in gameDates:
     # Create Arrays
     mlb_teamStats = []
@@ -60,6 +61,8 @@ for gameDate in gameDates:
         awaySLG = []
         homeOBP = []
         awayOBP = []
+        homeSO = []
+        awaySO = []
         game_analyzer = []
 
         request = requests.get(f"https://statsapi.mlb.com/api/v1/schedule?gamePk={games}&language=en&hydrate=lineups").text
@@ -89,6 +92,7 @@ for gameDate in gameDates:
                 homeBA.append(float(playerStats['avg']))
                 homeSLG.append(float(playerStats['slg']))
                 homeOBP.append(float(playerStats['obp']))
+                homeSO.append(float(playerStats['so'])/float(playerStats['ab']))
             except:
                 continue
         for player in awayTeam:
@@ -100,6 +104,7 @@ for gameDate in gameDates:
                 awayBA.append(float(playerStats['avg']))
                 awaySLG.append(float(playerStats['slg']))
                 awayOBP.append(float(playerStats['obp']))
+                awaySO.append(float(playerStats['so'])/float(playerStats['ab']))
             except:
                 continue
 
@@ -127,6 +132,7 @@ for gameDate in gameDates:
             "Home BA": round(mean(homeBA) - mean(awayBA), 3),
             "Home Slugging %": round(mean(homeSLG) - mean(awaySLG), 3),
             "Home OBP %": round(mean(homeOBP) - mean(awayOBP), 3),
+            "Home SO %": round(mean(homeSO) - mean(awaySO), 3) * -1,
             "Home ERA": round(float(homePitcherStats['era']) - float(awayPitcherStats['era']), 3) * -1,
             "Home WHIP": round(float(homePitcherStats['whip']) - float(awayPitcherStats['whip']), 3) * -1,
             "Home OBP Against": (round(float(homePitcherStats['obp']), 2) - round(float(awayPitcherStats['obp']), 2)) * -1,
@@ -135,6 +141,7 @@ for gameDate in gameDates:
             "Away BA": round(mean(awayBA) - mean(homeBA), 3),
             "Away Slugging %": round(mean(awaySLG) - mean(homeSLG), 3),
             "Away OBP %": round(mean(awayOBP) - mean(homeOBP), 3),
+            "Away SO %": round(mean(awaySO) - mean(homeSO), 3)  * -1,
             "Away ERA": round(float(awayPitcherStats['era']) - float(homePitcherStats['era']), 3) * -1,
             "Away WHIP": round(float(awayPitcherStats['whip']) - float(homePitcherStats['whip']), 3) * -1,
             "Away OBP Against": (round(float(awayPitcherStats['obp']), 2) - round(float(homePitcherStats['obp']), 2)) * -1,
@@ -142,97 +149,103 @@ for gameDate in gameDates:
             "Away BB/9 Against": (round(float(awayPitcherStats['bb9']), 2) - round(float(homePitcherStats['bb9']), 2)) * -1,
         }
 
-        homeAdvantage = advantages['Home BA'] + advantages['Home Slugging %'] + advantages['Home OBP %'] + advantages['Home ERA'] + advantages['Home WHIP'] + advantages['Home Homeruns/9 Against'] + advantages['Home OBP Against'] + advantages['Home BB/9 Against']
-        awayAdvantage = advantages['Away BA'] + advantages['Away Slugging %'] + advantages['Away OBP %'] + advantages['Away ERA'] + advantages['Away WHIP'] + advantages['Away Homeruns/9 Against'] + advantages['Away OBP Against'] + advantages['Away BB/9 Against']
+        homeAdvantage = advantages['Home BA'] + advantages['Home SO %'] + advantages['Home Slugging %'] + advantages['Home OBP %'] + advantages['Home ERA'] + advantages['Home WHIP'] + advantages['Home Homeruns/9 Against'] + advantages['Home OBP Against'] + advantages['Home BB/9 Against']
+        awayAdvantage = advantages['Away BA'] + advantages['Away SO %'] + advantages['Away Slugging %'] + advantages['Away OBP %'] + advantages['Away ERA'] + advantages['Away WHIP'] + advantages['Away Homeruns/9 Against'] + advantages['Away OBP Against'] + advantages['Away BB/9 Against']
 
 
         try:
             if (games_request_json['dates'][0]['games'][0]['teams']['home']['isWinner']) == True:
-                homeWinner = 'Yes'
+                homeWinner = 1
             elif (games_request_json['dates'][0]['games'][0]['teams']['home']['isWinner']) == False:
-                homeWinner = 'No'
+                homeWinner = 0
             else:
                 homeWinner = 'TBD'
 
             if (games_request_json['dates'][0]['games'][0]['teams']['away']['isWinner']) == True:
-                awayWinner = 'Yes'
+                awayWinner = 1
             elif (games_request_json['dates'][0]['games'][0]['teams']['away']['isWinner']) == False:
-                awayWinner = 'No'
+                awayWinner = 0
             else:
                 awayWinner = 'TBD'
         except:
             continue
 
         # Define Stats to Create Algorithm for
-        homeInput = "advantages['Home BA'] > advantages['Away BA']", "advantages['Home Slugging %'] > advantages['Away Slugging %']", "advantages['Home OBP %'] > advantages['Away OBP %']", "advantages['Home ERA'] > advantages['Away ERA']", "advantages['Home WHIP'] > advantages['Away WHIP']", "advantages['Home Homeruns/9 Against'] > advantages['Away Homeruns/9 Against']", "advantages['Home OBP Against'] > advantages['Away OBP Against'] ", "advantages['Home BB/9 Against'] > advantages['Away BB/9 Against']"
-        awayInput = "advantages['Away BA'] > advantages['Home BA']", "advantages['Away Slugging %'] > advantages['Home Slugging %']", "advantages['Away OBP %'] > advantages['Home OBP %']", "advantages['Away ERA'] > advantages['Home ERA']", "advantages['Away WHIP'] > advantages['Home WHIP']", "advantages['Away Homeruns/9 Against'] > advantages['Home Homeruns/9 Against']", "advantages['Away OBP Against'] > advantages['Home OBP Against'] ", "advantages['Away BB/9 Against'] > advantages['Home BB/9 Against']"
+        homeInput = "advantages['Home BA'] > advantages['Away BA']", "advantages['Home SO %'] > advantages['Away SO %']", "advantages['Home Slugging %'] > advantages['Away Slugging %']", "advantages['Home OBP %'] > advantages['Away OBP %']", "advantages['Home ERA'] > advantages['Away ERA']", "advantages['Home WHIP'] > advantages['Away WHIP']", "advantages['Home Homeruns/9 Against'] > advantages['Away Homeruns/9 Against']", "advantages['Home OBP Against'] > advantages['Away OBP Against'] ", "advantages['Home BB/9 Against'] > advantages['Away BB/9 Against']"
+        awayInput = "advantages['Away BA'] > advantages['Home BA']", "advantages['Away SO %'] > advantages['Home SO %']", "advantages['Away Slugging %'] > advantages['Home Slugging %']", "advantages['Away OBP %'] > advantages['Home OBP %']", "advantages['Away ERA'] > advantages['Home ERA']", "advantages['Away WHIP'] > advantages['Home WHIP']", "advantages['Away Homeruns/9 Against'] > advantages['Home Homeruns/9 Against']", "advantages['Away OBP Against'] > advantages['Home OBP Against'] ", "advantages['Away BB/9 Against'] > advantages['Home BB/9 Against']"
 
         # Get All Possible Combinations of Stats to be Analyzed
         homeoutput = sum([list(map(list, combinations(homeInput, i))) for i in range(len(homeInput) + 1)], [])
         awayoutput = sum([list(map(list, combinations(awayInput, i))) for i in range(len(awayInput) + 1)], [])
 
-        if homeWinner == 'Yes':
-            # Put all Possible Combinations in Operator Format
-            for stat_Array in homeoutput:
-                algorithm = ''
-                for stat in stat_Array:
-                    if (len(stat_Array)) == 1:
-                        algorithm += (stat)
-                    else:
-                        stat = stat + ' and '
-                        algorithm += stat
-                if 'and' in algorithm:
-                    algorithm = algorithm[:-5]
 
-                try:
-                    if eval(algorithm):
-                        projectedWinner = {
-                            'Projected Winner': advantages['Home Team'],
-                            'Winner Advantage (Beta)': homeAdvantage,
-                            'Opponent': advantages['Away Team'],
-                            'Opponent Deficit': awayAdvantage,
-                            'Winner': homeWinner,
-                            'Score': f"{advantages['Home Team']}: {games_request_json['dates'][0]['games'][0]['teams']['home']['score']}  {advantages['Away Team']}: {games_request_json['dates'][0]['games'][0]['teams']['away']['score']} ",
-                            'Algorithm': algorithm
-                        }
+        # Put all Possible Combinations in Operator Format
+        for stat_Array in homeoutput:
+            algorithm = ''
+            for stat in stat_Array:
+                if (len(stat_Array)) == 1:
+                    algorithm += (stat)
+                else:
+                    stat = stat + ' and '
+                    algorithm += stat
+            if 'and' in algorithm:
+                algorithm = algorithm[:-5]
 
-                        analysis_comparison.append(projectedWinner['Algorithm'])
-                except:
-                    continue
-        else:
-            # Put all Possible Combinations in Operator Format
-            for stat_Array in awayoutput:
-                algorithm = ''
-                for stat in stat_Array:
-                    if (len(stat_Array)) == 1:
-                        algorithm += (stat)
-                    else:
-                        stat = stat + ' and '
-                        algorithm += stat
-                if 'and' in algorithm:
-                    algorithm = algorithm[:-5]
+            try:
+                if eval(algorithm):
+                    projectedWinner = {
+                        'Projected Winner': advantages['Home Team'],
+                        'Winner Advantage (Beta)': homeAdvantage,
+                        'Opponent': advantages['Away Team'],
+                        'Opponent Deficit': awayAdvantage,
+                        'Did Projected Win': homeWinner,
+                        'Did Opponent Win': awayWinner,
+                        'Score': f"{advantages['Home Team']}: {games_request_json['dates'][0]['games'][0]['teams']['home']['score']}  {advantages['Away Team']}: {games_request_json['dates'][0]['games'][0]['teams']['away']['score']} ",
+                        'Algorithm': algorithm
+                    }
+                    analysis_comparison.append(projectedWinner)
+            except:
+                continue
 
-                try:
-                    if eval(algorithm):
-                        projectedWinner = {
-                            'Projected Winner': advantages['Away Team'],
-                            'Winner Advantage (Beta)': awayAdvantage,
-                            'Opponent': advantages['Home Team'],
-                            'Opponent Deficit': homeAdvantage,
-                            'Winner': awayWinner,
-                            'Score': f"{advantages['Away Team']}: {games_request_json['dates'][0]['games'][0]['teams']['away']['score']}  {advantages['Home Team']}: {games_request_json['dates'][0]['games'][0]['teams']['home']['score']} ",
-                            'Algorithm': algorithm
-                        }
+        # Put all Possible Combinations in Operator Format
+        for stat_Array in awayoutput:
+            algorithm = ''
+            for stat in stat_Array:
+                if (len(stat_Array)) == 1:
+                    algorithm += (stat)
+                else:
+                    stat = stat + ' and '
+                    algorithm += stat
+            if 'and' in algorithm:
+                algorithm = algorithm[:-5]
 
-                        analysis_comparison.append(projectedWinner['Algorithm'])
-                except:
-                    continue
+            try:
+                if eval(algorithm):
+                    projectedWinner = {
+                        'Projected Winner': advantages['Away Team'],
+                        'Winner Advantage (Beta)': awayAdvantage,
+                        'Opponent': advantages['Home Team'],
+                        'Opponent Deficit': homeAdvantage,
+                        'Did Projected Win': awayWinner,
+                        'Did Opponent Win': homeWinner,
+                        'Score': f"{advantages['Away Team']}: {games_request_json['dates'][0]['games'][0]['teams']['away']['score']}  {advantages['Home Team']}: {games_request_json['dates'][0]['games'][0]['teams']['home']['score']} ",
+                        'Algorithm': algorithm
+                    }
+                    analysis_comparison.append(projectedWinner)
+            except:
+                continue
 
-algorithm_Analyzer = (dict(Counter(analysis_comparison)))
-algorithm_Analyzer_Table = PrettyTable(['Stat', 'Amount of (Games) Won'])
-for val, key in algorithm_Analyzer.items():
-   algorithm_Analyzer_Table.add_row([val, key])
 
-algorithm_Analyzer_Table.sortby = 'Amount of (Games) Won'
-algorithm_Analyzer_Table.reversesort = True
-print(algorithm_Analyzer_Table)
+df = pd.DataFrame(analysis_comparison, columns=['Algorithm', 'Did Projected Win', 'Did Opponent Win'])
+df_grouped = df.groupby(['Algorithm']).sum()
+df_algorithm_stats = (df_grouped.sort_values(by=['Did Projected Win'], ascending=False))
+total_games = df_algorithm_stats["Did Projected Win"] + df_algorithm_stats["Did Opponent Win"]
+df_algorithm_stats["Total Games"] = total_games
+winPercentage = df_algorithm_stats["Did Projected Win"] / df_algorithm_stats["Total Games"]
+df_algorithm_stats["Win Percentage"] = winPercentage
+df_algorithm_winpercentage_sorted = (df_algorithm_stats.sort_values(by=['Win Percentage'], ascending=False))
+pd.set_option('display.max_rows', None)
+pd.set_option('display.max_columns', None)
+pd.set_option('display.width', 100000)
+
+print(df_algorithm_winpercentage_sorted)
