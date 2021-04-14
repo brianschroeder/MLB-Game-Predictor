@@ -219,7 +219,7 @@ for games in mlb_schedule():
             'Weather': f"{game_info['gameData']['weather']['temp']}, {game_info['gameData']['weather']['condition']}"
         }
         
-        if projectedWinner['Winner Advantage (Beta)'] > 15:
+        if projectedWinner['Winner Advantage (Beta)'] > 20:
             projectedOutcome.append(projectedWinner)
 
     if advantages['Away SO %'] > advantages['Home SO %'] and advantages['Away BA'] > advantages['Home BA'] and advantages['Away OBP %'] > advantages['Home OBP %'] and advantages['Away Slugging %'] > advantages['Home Slugging %'] and advantages[
@@ -255,7 +255,7 @@ for games in mlb_schedule():
             'Weather': f"{game_info['gameData']['weather']['temp']}, {game_info['gameData']['weather']['condition']}"
         }
         
-        if projectedWinner['Winner Advantage (Beta)'] > 15:
+        if projectedWinner['Winner Advantage (Beta)'] > 20:
             projectedOutcome.append(projectedWinner)
     mlb_teamStats.append(stats)
     mlb_advantages.append(advantages)
