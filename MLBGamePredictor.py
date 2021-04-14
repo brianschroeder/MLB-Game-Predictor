@@ -30,6 +30,8 @@ for games in mlb_schedule():
     awayOBP = []
     homeSO = []
     awaySO = []
+    homeOPS = []
+    awayOPS = []
 
     request = requests.get(f"https://statsapi.mlb.com/api/v1/schedule?gamePk={games}&language=en&hydrate=lineups").text
     games_request_json = json.loads(request)
@@ -59,6 +61,7 @@ for games in mlb_schedule():
             homeSLG.append(float(playerStats['slg']))
             homeOBP.append(float(playerStats['obp']))
             homeSO.append(float(playerStats['so']) / float(playerStats['ab']))
+            homeOPS.append(float(playerStats['ops']))
         except:
             continue
     for player in awayTeam:
@@ -71,6 +74,7 @@ for games in mlb_schedule():
             awaySLG.append(float(playerStats['slg']))
             awayOBP.append(float(playerStats['obp']))
             awaySO.append(float(playerStats['so']) / float(playerStats['ab']))
+            awayOPS.append(float(playerStats['ops']))
         except:
             continue
 
@@ -98,6 +102,7 @@ for games in mlb_schedule():
         "Home Batting Average": round(mean(homeBA), 3),
         "Home Slugging %": round(mean(homeSLG), 3),
         "Home OBP %": round(mean(homeOBP), 3),
+        "Home OPS %": round(mean(homeOPS), 3),
         "Home SO %": round(mean(homeSO), 2),
         "Home Starting ERA": round(float(homePitcherStats['era']), 2),
         "Home Starting WHIP": round(float(homePitcherStats['whip']), 2),
@@ -105,8 +110,9 @@ for games in mlb_schedule():
         "Home Starting Homeruns/9 Against": round(float(homePitcherStats['h9']), 2),
         "Home Starting BB/9 Against": round(float(homePitcherStats['bb9']), 2),
         "Away Batting Average": round(mean(awayBA), 3),
-        "Away Slugging %": round(mean(homeSLG), 3),
+        "Away Slugging %": round(mean(awaySLG), 3),
         "Away OBP %": round(mean(awayOBP), 3),
+        "Away OPS %": round(mean(awayOPS), 3),
         "Away SO %": round(mean(awaySO), 2),
         "Away Starting ERA": round(float(awayPitcherStats['era']), 2),
         "Away Starting WHIP": round(float(awayPitcherStats['whip']), 2),
@@ -121,6 +127,7 @@ for games in mlb_schedule():
         "Home BA": round(mean(homeBA) - mean(awayBA), 3),
         "Home Slugging %": round(mean(homeSLG) - mean(awaySLG), 3),
         "Home OBP %": round(mean(homeOBP) - mean(awayOBP), 3),
+        "Home OPS %": round(mean(homeOPS) - mean(awayOPS), 3),
         "Home SO %": round(mean(homeSO) - mean(awaySO), 3) * -1,
         "Home ERA": round(float(homePitcherStats['era']) - float(awayPitcherStats['era']), 3) * -1,
         "Home WHIP": round(float(homePitcherStats['whip']) - float(awayPitcherStats['whip']), 3) * -1,
@@ -130,6 +137,7 @@ for games in mlb_schedule():
         "Away BA": round(mean(awayBA) - mean(homeBA), 3),
         "Away Slugging %": round(mean(awaySLG) - mean(homeSLG), 3),
         "Away OBP %": round(mean(awayOBP) - mean(homeOBP), 3),
+        "Away OPS %": round(mean(awayOPS) - mean(homeOPS), 3),
         "Away SO %": round(mean(awaySO) - mean(homeSO), 3) * -1,
         "Away ERA": round(float(awayPitcherStats['era']) - float(homePitcherStats['era']), 3) * -1,
         "Away WHIP": round(float(awayPitcherStats['whip']) - float(homePitcherStats['whip']), 3) * -1,
@@ -137,9 +145,6 @@ for games in mlb_schedule():
         "Away Homeruns/9 Against": (round(float(awayPitcherStats['h9']), 2) - round(float(homePitcherStats['h9']), 2)) * -1,
         "Away BB/9 Against": (round(float(awayPitcherStats['bb9']), 2) - round(float(homePitcherStats['bb9']), 2)) * -1,
     }
-
-    homeAdvantage = advantages['Home SO %'] + advantages['Home Slugging %'] + advantages['Home ERA'] + advantages['Home Homeruns/9 Against'] + advantages['Home OBP Against']
-    awayAdvantage = advantages['Away SO %'] + advantages['Away Slugging %'] + advantages['Away ERA'] + advantages['Away Homeruns/9 Against'] + advantages['Away OBP Against']
 
     # Get Game Info
     game_request = requests.get(f"http://statsapi.mlb.com/api/v1.1/game/{games}/feed/live").text
@@ -180,13 +185,29 @@ for games in mlb_schedule():
         awayWinner = 'TBD'
 
 
-    if advantages['Home Slugging %'] > advantages['Away Slugging %'] and advantages['Home OBP %'] > advantages['Away OBP %'] and advantages['Home ERA'] > advantages['Away ERA'] and advantages['Home WHIP'] > advantages['Away WHIP']:
+    if advantages['Home SO %'] > advantages['Away SO %'] and advantages['Home BA'] > advantages['Away BA'] and advantages['Home OBP %'] > advantages['Away OBP %'] and advantages['Home Slugging %'] > advantages['Away Slugging %'] and advantages[
+       'Home OBP Against'] > advantages['Away OBP Against'] and advantages['Home Homeruns/9 Against'] > advantages['Home Homeruns/9 Against'] and advantages['Home ERA'] > advantages['Away ERA'] and advantages['Home WHIP'] > advantages['Away WHIP']:
+
+        try:
+            homeAdvantage = (100 - 100 * stats['Home SO %']/stats['Away SO %']) * 0.30 \
+             + (100 - 100 * stats['Away Batting Average']/stats['Home Batting Average']) * 0.20 \
+             + (100 - 100 * stats['Away OBP %'] / stats['Home OBP %']) * 0.20 \
+             + (100 - 100 * stats['Away OPS %'] / stats['Home OPS %']) * 0.15 \
+             + (100 - 100 * stats['Away Slugging %']/stats['Home Slugging %']) * 0.15 \
+             + (100 - 100 * stats['Home Starting OBP Against']/stats['Away Starting OBP Against']) * 0.30 \
+             + (100 - 100 * stats['Home Starting Homeruns/9 Against'] / stats['Away Starting Homeruns/9 Against']) * 0.25 \
+             + (100 - 100 * stats['Home Starting ERA'] / stats['Away Starting ERA']) * 0.20 \
+             + (100 - 100 * stats['Home Starting WHIP'] / stats['Away Starting WHIP']) * 0.20
+
+        except:
+            continue
+
         projectedWinner = {
             'Projected Winner': advantages['Home Team'],
-            'Winner Advantage (Beta)': homeAdvantage,
+            'Winner Advantage (Beta)': round(homeAdvantage, 2),
             'Winner ML': ml_home,
             'Opponent': advantages['Away Team'],
-            'Opponent Deficit': awayAdvantage,
+            'Opponent Deficit': -round(homeAdvantage, 2),
             'Opponent ML': ml_away,
             'Spread': spread,
             'Over/Under': ou,
@@ -197,15 +218,32 @@ for games in mlb_schedule():
             'Score': f"{advantages['Home Team']}: {games_request_json['dates'][0]['games'][0]['teams']['home']['score']}  {advantages['Away Team']}: {games_request_json['dates'][0]['games'][0]['teams']['away']['score']} ",
             'Weather': f"{game_info['gameData']['weather']['temp']}, {game_info['gameData']['weather']['condition']}"
         }
-        projectedOutcome.append(projectedWinner)
+        
+        if projectedWinner['Winner Advantage (Beta)'] > 15:
+            projectedOutcome.append(projectedWinner)
 
-    if advantages['Away Slugging %'] > advantages['Home Slugging %'] and advantages['Away OBP %'] > advantages['Home OBP %'] and advantages['Away ERA'] > advantages['Home ERA'] and advantages['Away WHIP'] > advantages['Home WHIP']:
+    if advantages['Away SO %'] > advantages['Home SO %'] and advantages['Away BA'] > advantages['Home BA'] and advantages['Away OBP %'] > advantages['Home OBP %'] and advantages['Away Slugging %'] > advantages['Home Slugging %'] and advantages[
+       'Away OBP Against'] > advantages['Home OBP Against'] and advantages['Away Homeruns/9 Against'] > advantages['Home Homeruns/9 Against'] and advantages['Away ERA'] > advantages['Home ERA'] and advantages['Away WHIP'] > advantages['Home WHIP']:
+
+        try:
+            awayAdvantage = (100 - 100 * stats['Away SO %']/stats['Home SO %']) * 0.30 \
+             + (100 - 100 * stats['Home Batting Average']/stats['Away Batting Average']) * 0.20 \
+             + (100 - 100 * stats['Home OBP %']/stats['Away OBP %']) * 0.20 \
+             + (100 - 100 * stats['Home OPS %']/stats['Away OPS %']) * 0.15 \
+             + (100 - 100 * stats['Home Slugging %']/stats['Away Slugging %']) * 0.15 \
+             + (100 - 100 * stats['Away Starting OBP Against']/stats['Home Starting OBP Against']) * 0.30 \
+             + (100 - 100 * stats['Away Starting Homeruns/9 Against']/stats['Home Starting Homeruns/9 Against']) * 0.25 \
+             + (100 - 100 * stats['Away Starting ERA'] / stats['Home Starting ERA']) * 0.20 \
+             + (100 - 100 * stats['Away Starting WHIP'] / stats['Home Starting WHIP']) * 0.20
+        except:
+            continue
+
         projectedWinner = {
             'Projected Winner': advantages['Away Team'],
-            'Winner Advantage (Beta)': awayAdvantage,
+            'Winner Advantage (Beta)': round(awayAdvantage, 2),
             'Winner ML': ml_away,
             'Opponent': advantages['Home Team'],
-            'Opponent Deficit': homeAdvantage,
+            'Opponent Deficit': -round(awayAdvantage, 2),
             'Opponent ML': ml_home,
             'Spread': spread,
             'Over/Under': ou,
@@ -216,8 +254,9 @@ for games in mlb_schedule():
             'Score': f"{advantages['Away Team']}: {games_request_json['dates'][0]['games'][0]['teams']['away']['score']}  {advantages['Home Team']}: {games_request_json['dates'][0]['games'][0]['teams']['home']['score']} ",
             'Weather': f"{game_info['gameData']['weather']['temp']}, {game_info['gameData']['weather']['condition']}"
         }
-
-        projectedOutcome.append(projectedWinner)
+        
+        if projectedWinner['Winner Advantage (Beta)'] > 15:
+            projectedOutcome.append(projectedWinner)
     mlb_teamStats.append(stats)
     mlb_advantages.append(advantages)
 
