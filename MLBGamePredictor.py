@@ -180,7 +180,7 @@ for games in mlb_schedule():
         awayWinner = 'TBD'
 
 
-    if advantages['Home SO %'] > advantages['Away SO %'] and advantages['Home Slugging %'] > advantages['Away Slugging %'] and advantages['Home ERA'] > advantages['Away ERA'] and advantages['Home Homeruns/9 Against'] > advantages['Away Homeruns/9 Against'] and advantages['Home OBP Against'] > advantages['Away OBP Against']:
+    if advantages['Home Slugging %'] > advantages['Away Slugging %'] and advantages['Home OBP %'] > advantages['Away OBP %'] and advantages['Home ERA'] > advantages['Away ERA'] and advantages['Home WHIP'] > advantages['Away WHIP']:
         projectedWinner = {
             'Projected Winner': advantages['Home Team'],
             'Winner Advantage (Beta)': homeAdvantage,
@@ -199,7 +199,7 @@ for games in mlb_schedule():
         }
         projectedOutcome.append(projectedWinner)
 
-    if advantages['Away SO %'] > advantages['Home SO %'] and advantages['Away Slugging %'] > advantages['Home Slugging %'] and advantages['Away ERA'] > advantages['Home ERA'] and advantages['Away Homeruns/9 Against'] > advantages['Home Homeruns/9 Against'] and advantages['Away OBP Against'] > advantages['Home OBP Against']:
+    if advantages['Away Slugging %'] > advantages['Home Slugging %'] and advantages['Away OBP %'] > advantages['Home OBP %'] and advantages['Away ERA'] > advantages['Home ERA'] and advantages['Away WHIP'] > advantages['Home WHIP']:
         projectedWinner = {
             'Projected Winner': advantages['Away Team'],
             'Winner Advantage (Beta)': awayAdvantage,
