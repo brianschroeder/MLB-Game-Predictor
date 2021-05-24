@@ -32,6 +32,10 @@ for games in mlb_schedule():
     awaySO = []
     homeOPS = []
     awayOPS = []
+    homeBullpenERA = []
+    awayBullpenERA = []
+    homeBullpenWHIP = []
+    awayBullpenWHIP = []
 
     request = requests.get(f"https://statsapi.mlb.com/api/v1/schedule?gamePk={games}&language=en&hydrate=lineups").text
     games_request_json = json.loads(request)
@@ -96,6 +100,30 @@ for games in mlb_schedule():
     except:
         continue
 
+    # Get Bullpen Pitching Stats
+    try: 
+        pitcherRequest = requests.get(f"http://statsapi.mlb.com/api/v1/game/{games}/boxscore").text
+        pitcher_json = json.loads(pitcherRequest)
+
+        homeBullpen = pitcher_json['teams']['home']['bullpen']
+        awayBullpen = pitcher_json['teams']['away']['bullpen']
+
+        for pitcher in homeBullpen:
+            homePitcherRequest = requests.get(f"http://lookup-service-prod.mlb.com/json/named.sport_career_pitching.bam?league_list_id='mlb'&game_type='R'&player_id='{pitcher}'").text
+            homepitcherRequest_json = json.loads(homePitcherRequest)
+            homePitcherStats = (homepitcherRequest_json['sport_career_pitching']['queryResults']['row'])
+            homeBullpenERA.append(float(homePitcherStats['era']))
+            homeBullpenWHIP.append(float(homePitcherStats['whip']))
+
+        for pitcher in awayBullpen:
+            awayPitcherRequest = requests.get(f"http://lookup-service-prod.mlb.com/json/named.sport_career_pitching.bam?league_list_id='mlb'&game_type='R'&player_id='{pitcher}'").text
+            awaypitcherRequest_json = json.loads(awayPitcherRequest)
+            awayPitcherStats = (awaypitcherRequest_json['sport_career_pitching']['queryResults']['row'])
+            awayBullpenERA.append(float(awayPitcherStats['era']))
+            awayBullpenWHIP.append(float(awayPitcherStats['whip']))
+    except:
+        continue
+
     stats = {
         'Home Team': homeTeamName,
         "Away Team": awayTeamName,
@@ -109,6 +137,8 @@ for games in mlb_schedule():
         "Home Starting OBP Against": round(float(homePitcherStats['obp']), 2),
         "Home Starting Homeruns/9 Against": round(float(homePitcherStats['h9']), 2),
         "Home Starting BB/9 Against": round(float(homePitcherStats['bb9']), 2),
+        "Home Bullpen ERA": round(mean(homeBullpenERA), 3),
+        "Home Bullpen WHIP": round(mean(homeBullpenWHIP), 3),
         "Away Batting Average": round(mean(awayBA), 3),
         "Away Slugging %": round(mean(awaySLG), 3),
         "Away OBP %": round(mean(awayOBP), 3),
@@ -119,6 +149,8 @@ for games in mlb_schedule():
         "Away Starting OBP Against": round(float(awayPitcherStats['obp']), 2),
         "Away Starting Homeruns/9 Against": round(float(awayPitcherStats['h9']), 2),
         "Away Starting BB/9 Against": round(float(awayPitcherStats['bb9']), 2),
+        "Away Bullpen ERA": round(mean(awayBullpenERA), 3),
+        "Away Bullpen WHIP": round(mean(awayBullpenWHIP), 3)
     }
 
     advantages = {
@@ -134,6 +166,8 @@ for games in mlb_schedule():
         "Home OBP Against": (round(float(homePitcherStats['obp']), 2) - round(float(awayPitcherStats['obp']), 2)) * -1,
         "Home Homeruns/9 Against": (round(float(homePitcherStats['h9']), 2) - round(float(awayPitcherStats['h9']), 2)) * -1,
         "Home BB/9 Against": (round(float(homePitcherStats['bb9']), 2) - round(float(awayPitcherStats['bb9']),2)) * -1,
+        "Home Bullpen ERA": (round(mean(homeBullpenERA), 3) - round(mean(awayBullpenERA), 3)) * -1,
+        "Home Bullpen WHIP": (round(mean(homeBullpenWHIP), 3) - round(mean(awayBullpenWHIP), 3)) * -1,
         "Away BA": round(mean(awayBA) - mean(homeBA), 3),
         "Away Slugging %": round(mean(awaySLG) - mean(homeSLG), 3),
         "Away OBP %": round(mean(awayOBP) - mean(homeOBP), 3),
@@ -144,6 +178,8 @@ for games in mlb_schedule():
         "Away OBP Against": (round(float(awayPitcherStats['obp']), 2) - round(float(homePitcherStats['obp']), 2)) * -1,
         "Away Homeruns/9 Against": (round(float(awayPitcherStats['h9']), 2) - round(float(homePitcherStats['h9']), 2)) * -1,
         "Away BB/9 Against": (round(float(awayPitcherStats['bb9']), 2) - round(float(homePitcherStats['bb9']), 2)) * -1,
+        "Away Bullpen ERA": (round(mean(awayBullpenERA), 3) - round(mean(homeBullpenERA), 3)) * -1,
+        "Away Bullpen WHIP": (round(mean(awayBullpenWHIP), 3) - round(mean(homeBullpenWHIP), 3)) * -1
     }
 
     # Get Game Info
