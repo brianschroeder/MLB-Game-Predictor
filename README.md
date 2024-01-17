@@ -2,7 +2,7 @@
 The goal of this project is to gather data from previous games and years, create a program to gather the most common stats that effected a Teams Winning Percentage, and predict future games based off a model that was created from the data gained from the historical analysis.
 
 # Disclaimer
-This project is deprecated and has not been updadted for a few years. Was one of my first projects in python, so please excuse the lack of effeciency in data methods.
+This project is deprecated and has not been updadted for a few years. This was one of my first projects in python, so please excuse the lack of effeciency in data methods.
 Also this is purley for educational pusporses only and any use is subject to the person using the code and their own judegment. 
 
 # Findings
