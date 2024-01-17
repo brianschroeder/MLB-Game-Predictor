@@ -64,7 +64,7 @@ The secret sauce as of right now (Pending more stats being included in the algor
 
 ## Results
 
-Note: In situations where a lower stat is better such as strike out percentage the has already been factored in when using the greater than operator.
+Note: In situations where a lower stat is better such as strike out percentage that has already been factored in when using the greater than operator.
 
 Home Strike Out % > Away Strike Out% and Home Slugging % > Away Slugging % and Home ERA > Away ERA and Home Homeruns/9 Against > Away Homeruns/9 Against and Home OBP Against > Away OBP Against:
 
